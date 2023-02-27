@@ -1,12 +1,20 @@
-package compiler;
-
 import java.util.Arrays;
 import java.util.LinkedList;
 
 public class cimpilermain {
+	public static void main(String[] args) {
+		cimpilermain a = new cimpilermain();
+		
+		while(a.nextToken());
+		a.printtok();
+	}
+	
 		LinkedList<Token> list=new LinkedList<Token>();
-
-	  private final String code="a";
+		public void printtok() {
+			for(int i=0; i<list.size();i++)
+			System.out.print(list.get(i).getValue());
+		}
+	  private final String code="var 12";
 	  private final int codeLength=code.length();
 
 	  private int currentIndex=0;
@@ -19,29 +27,31 @@ public class cimpilermain {
 	   */
 	  public boolean nextToken() {
 
-	    while (currentIndex>=codeLength) { // while loop is to fetch nextToken, if a skipWS occurs.
-
+	    while (currentIndex<codeLength) { //
+	    	System.out.print(currentIndex+" "+codeLength);
 	      previousToken = currentToken; // in case you need the previous token
-
 	      final char currentChar = code.charAt(currentIndex);
-
-	      if (Arrays.asList(' ', '\r', '\t', '\n').contains(currentChar)) { // 1. WS
+	      if (Arrays.asList(' ', '\r', '\t', '\n').contains(currentChar)) { // ignore
 	        skipWhiteSpace();
 	        continue;
-	      } else if (currentChar == '=') { // 2. LET
+	      } else if (currentChar == '=') { // 2. SET
 	        currentToken = new Token("EQ");
 	        currentIndex++;
 	      } else if (Character.isDigit(currentChar)) { // 3. INT
 	        currentToken = new Token("NUM", readNumber());
 	      } else if (Character.isLetter(currentChar)) {
 	        String variableName = readVariable();
-	        if (variableName.equalsIgnoreCase("print")) { // 4. SHOW
-	          currentToken = new Token("Print");
+	       
+	        if (variableName.equalsIgnoreCase("print")) { // 4. PRINT
+	          currentToken = new Token("print");
 	        } else { // 5. VAR
 	          currentToken = new Token("Var", variableName);
 	        }
 	      } else {
 	        System.out.print("Token unknown at "+currentChar);
+	      }
+	      if(currentToken!=previousToken) {
+	      list.add(currentToken);
 	      }
 	      return true;
 	    }
@@ -54,17 +64,33 @@ public class cimpilermain {
 	   * @return String value of Integer Number.
 	   */
 	  private String readNumber() {
-	      ...
-	  }
+		    StringBuilder sb = new StringBuilder();
+		    char currentChar = code.charAt(currentIndex);
+		    while (currentIndex<=codeLength && Character.isDigit(currentChar)) {
+		      sb.append(currentChar);
+		      currentIndex++;
+		      if (currentIndex>=codeLength) break;
+		      currentChar = code.charAt(currentIndex);
+		    }
+		    return sb.toString();
+		  }
 
 	  /** @return String read from current index. */
 	  private String readVariable() {
-	     ...
-	  }
+		    StringBuilder sb = new StringBuilder();
+		    char currentChar = code.charAt(currentIndex);
+		    while (currentIndex<=codeLength && Character.isLetter(currentChar)) {
+		      sb.append(currentChar);
+		      currentIndex++;
+		      if (currentIndex>=codeLength) break;
+		      currentChar = code.charAt(currentIndex);
+		    }
+		    return sb.toString();
+		  }
 
 	  /** Skip WhiteSpace(WS) */
 	  private void skipWhiteSpace() {
-		    while (currentIndex>=codeLength) {
+		    while (currentIndex<=codeLength) {
 		      if (Arrays.asList(' ', '\r', '\t', '\n').contains(code.charAt(currentIndex))) {
 		        currentIndex++;
 		      } else {

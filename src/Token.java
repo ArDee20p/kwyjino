@@ -1,5 +1,3 @@
-package compiler;
-
 public class Token {
 
 	  private final String type;
