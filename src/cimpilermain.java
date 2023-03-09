@@ -1,31 +1,20 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 
-/*
- * General flow of process: Tokenizer -> Lexer -> Parser.
- */
-
 public class cimpilermain {
-	/* 
-	 * While loop looks at each token.
-	 */
 	public static void main(String[] args) {
 		cimpilermain a = new cimpilermain();
-		Parser p = new Parser();
 		
 		while(a.nextToken());
 		a.printtok();
-		Parser.parseLexedTokens(a.list);
 	}
-	/*
-	 * Get value from each entry in token linked list.
-	 */
+	
 		LinkedList<Token> list=new LinkedList<Token>();
 		public void printtok() {
 			for(int i=0; i<list.size();i++)
 			System.out.print(list.get(i).getValue());
 		}
-	  private final String code="var 12"; 			//string of example code to tokenize.
+	  private final String code="`vat 12 ( waffle  nougat` asd";
 	  private final int codeLength=code.length();
 
 	  private int currentIndex=0;
@@ -38,29 +27,111 @@ public class cimpilermain {
 	   */
 	  public boolean nextToken() {
 
-	    while (currentIndex<codeLength) { //
-	    	System.out.print(currentIndex+" "+codeLength);
-	      previousToken = currentToken; // in case you need the previous token
-	      final char currentChar = code.charAt(currentIndex);
-	      if (Arrays.asList(' ', '\r', '\t', '\n').contains(currentChar)) { 
-	        skipWhiteSpace();										// 1. Whitespace (ignore)
-	        continue;
-	      } else if (currentChar == '=') { 							// 2. SET
+	    while (currentIndex<codeLength) { 
+	    	
+	    	previousToken = currentToken; // in case you need the previous token
+	    	 char currentChar = code.charAt(currentIndex);
+	      if (Arrays.asList(' ', '\r', '\t', '\n').contains(currentChar)) { // ignore
+	    	  skipWhiteSpace();
+	    	  continue;
+	      }
+	      else if (currentChar == '=') { // 2. SET
 	        currentToken = new Token("EQ");
 	        currentIndex++;
-	      } else if (Character.isDigit(currentChar)) { 				// 3. INT
-	        currentToken = new Token("NUM", readNumber());
-	      } else if (Character.isLetter(currentChar)) {
-	        String variableName = readVariable();
+	      }
+	      else if (currentChar == '{') { // 2. SET
+		        currentToken = new Token("LB");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '}') { // 2. SET
+		        currentToken = new Token("RB");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '+') { // 2. add
+		        currentToken = new Token("PL");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '-') { // 2. subtract
+		        currentToken = new Token("MIN");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '/') { // 2. divide
+		        currentToken = new Token("DIV");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '*') { // 2. multiply
+		        currentToken = new Token("MULT");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '`') { // comment indicator
+		        currentToken = new Token("COM");
+		        currentIndex++;
+		      }
+	      else if (currentChar == '"') { // string grabber
+	    	  	currentIndex++;
+		        String variableName="";
+		        while(code.charAt(currentIndex)!='"')
+		        {
+		        	
+		        	 variableName= variableName+code.charAt(currentIndex);
+		        	 System.out.print(code.charAt(currentIndex));
+		        	 System.out.print(currentIndex);
+		        	 currentIndex++;
+		        	 
+		        }
+		        currentIndex++;
+		        currentToken = new Token("STR", variableName);
+		        	
+		      }
+	      else if (Character.isDigit(currentChar))
+	      { // 3. INT
+	    	  currentToken = new Token("NUM", readNumber());
+	      }
+	      else if (Character.isLetter(currentChar))
+	      {
+	    	  String variableName = readVariable();
 	       
-	        if (variableName.equalsIgnoreCase("print")) { 			// 4. PRINT
-	          currentToken = new Token("PRINT");
-	        } else { 												// 5. VAR
-	          currentToken = new Token("VAR", variableName);
+	    	  //This is where command cases go. Print, classes, access
+	    	  if (variableName.equalsIgnoreCase("print"))
+	    	  { // 4. PRINT
+	    		  currentToken = new Token("print");
+	    	  }
+	    	  if (variableName.equalsIgnoreCase("private"))
+	    	  { // 4. PRINT
+	    		  currentToken = new Token("priv");
+	    	  }
+	    	  if (variableName.equalsIgnoreCase("public"))
+	    	  { // 4. PRINT
+	    		  currentToken = new Token("pub");
+	    	  }
+	    	  if (variableName.equalsIgnoreCase("class"))
+	    	  { // 4. PRINT
+	    		  currentToken = new Token("class");
+	    	  }
+	        else
+	        { // 5. VAR
+	          currentToken = new Token("Var", variableName);
 	        }
-	      } else {
+	      }
+	      else if (currentChar == '(')
+	      { //paren
+	    	  currentToken = new Token("LP");
+	    	  currentIndex++;
+		  }
+	      else if (currentChar == ')')
+	      { // paren
+	    	  currentToken = new Token("RP");
+	    	  currentIndex++;
+		  }
+	      
+	      
+	      
+	      
+	      
+	      else {
 	        System.out.print("Token unknown at "+currentChar);
 	      }
+	      
 	      if(currentToken!=previousToken) {
 	      list.add(currentToken);
 	      }
