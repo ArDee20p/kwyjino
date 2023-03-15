@@ -2,21 +2,18 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 public class cimpilermain {
-	public static void main(String[] args) {
-		cimpilermain a = new cimpilermain();
-		
-		while(a.nextToken());
-		a.printtok();
-	}
+	public String code="";
+	private int codeLength=code.length();
 	
 		LinkedList<Token> list=new LinkedList<Token>();
 		public void printtok() {
 			for(int i=0; i<list.size();i++)
 			System.out.print(list.get(i).getValue());
 		}
-	  private final String code="`vat 12 ( waffle  nougat` asd";
-	  private final int codeLength=code.length();
-
+		public cimpilermain(String codeInput){
+			code=codeInput;
+			codeLength=code.length();
+		}
 	  private int currentIndex=0;
 	  private Token currentToken;
 	  private Token previousToken;
@@ -93,33 +90,33 @@ public class cimpilermain {
 	       
 	    	  //This is where command cases go. Print, classes, access
 	    	  if (variableName.equalsIgnoreCase("print"))
-	    	  { // 4. PRINT
+	    	  { // PRINT
 	    		  currentToken = new Token("print");
 	    	  }
 	    	  if (variableName.equalsIgnoreCase("private"))
-	    	  { // 4. PRINT
+	    	  { // private modifier
 	    		  currentToken = new Token("priv");
 	    	  }
 	    	  if (variableName.equalsIgnoreCase("public"))
-	    	  { // 4. PRINT
+	    	  { // Public modifier
 	    		  currentToken = new Token("pub");
 	    	  }
-	    	  if (variableName.equalsIgnoreCase("class"))
-	    	  { // 4. PRINT
-	    		  currentToken = new Token("class");
+	    	  if (variableName.equalsIgnoreCase("obj"))
+	    	  { // object
+	    		  currentToken = new Token("obj");
 	    	  }
 	        else
-	        { // 5. VAR
+	        { // VAR
 	          currentToken = new Token("Var", variableName);
 	        }
 	      }
 	      else if (currentChar == '(')
-	      { //paren
+	      { //Lparen
 	    	  currentToken = new Token("LP");
 	    	  currentIndex++;
 		  }
 	      else if (currentChar == ')')
-	      { // paren
+	      { // Rparen
 	    	  currentToken = new Token("RP");
 	    	  currentIndex++;
 		  }
