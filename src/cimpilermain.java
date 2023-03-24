@@ -143,7 +143,7 @@ public class cimpilermain {
 	   * @return String value of Integer Number.
 	   */
 	  private String readNumber() {
-		    StringBuilder sb = new StringBuilder();
+		  StringBuilder sb = new StringBuilder();
 		    char currentChar = code.charAt(currentIndex);
 		    while (currentIndex<=codeLength && Character.isDigit(currentChar)) {
 		      sb.append(currentChar);
