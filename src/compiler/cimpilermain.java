@@ -54,12 +54,28 @@ public class cimpilermain {
 	   * @return String value of Integer Number.
 	   */
 	  private String readNumber() {
-	      ...
+		    StringBuilder sb = new StringBuilder();
+		    char currentChar = code.charAt(currentIndex);
+		    while (currentIndex<=codeLength && Character.isLetter(currentChar)) {
+		      sb.append(currentChar);
+		      currentIndex++;
+		      if (currentIndex>=codeLength) break;
+		      currentChar = code.charAt(currentIndex);
+		    }
+		    return sb.toString();
 	  }
 
 	  /** @return String read from current index. */
 	  private String readVariable() {
-	     ...
+		    StringBuilder sb = new StringBuilder();
+		    char currentChar = code.charAt(currentIndex);
+		    while (currentIndex<=codeLength && Character.isLetter(currentChar)) {
+		      sb.append(currentChar);
+		      currentIndex++;
+		      if (currentIndex>=codeLength) break;
+		      currentChar = code.charAt(currentIndex);
+		    }
+		    return sb.toString();
 	  }
 
 	  /** Skip WhiteSpace(WS) */
