@@ -22,6 +22,7 @@ public class cimpilermain {
 	  private int currentIndex=0;
 	  private Token currentToken;
 	  private Token previousToken;
+	  ////////////////////////////////////////////////doesn't know what an & is. May or may not be relevant later
 	   /**
 	   * Updates currentToken to the next valid Token if it is available.
 	   *
