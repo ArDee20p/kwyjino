@@ -4,11 +4,16 @@ import java.util.LinkedList;
 public class cimpilermain {
 	public String code="";
 	private int codeLength=code.length();
+	public String teststring="";
+	public String testtypes="";
 	
 		LinkedList<Token> list=new LinkedList<Token>();
 		public void printtok() {
-			for(int i=0; i<list.size();i++)
-			System.out.print(list.get(i).getValue());
+			for(int i=0; i<list.size();i++) {
+				System.out.print(list.get(i).getType());
+				teststring=teststring+list.get(i).getValue();
+				testtypes=testtypes+list.get(i).getType();
+			}
 		}
 		public cimpilermain(String codeInput){
 			code=codeInput;
@@ -71,8 +76,6 @@ public class cimpilermain {
 		        {
 		        	
 		        	 variableName= variableName+code.charAt(currentIndex);
-		        	 System.out.print(code.charAt(currentIndex));
-		        	 System.out.print(currentIndex);
 		        	 currentIndex++;
 		        	 
 		        }
@@ -93,22 +96,22 @@ public class cimpilermain {
 	    	  { // PRINT
 	    		  currentToken = new Token("print");
 	    	  }
-	    	  if (variableName.equalsIgnoreCase("private"))
+	    	  else if (variableName.equalsIgnoreCase("private"))
 	    	  { // private modifier
 	    		  currentToken = new Token("priv");
 	    	  }
-	    	  if (variableName.equalsIgnoreCase("public"))
+	    	  else if (variableName.equalsIgnoreCase("public"))
 	    	  { // Public modifier
 	    		  currentToken = new Token("pub");
 	    	  }
-	    	  if (variableName.equalsIgnoreCase("obj"))
+	    	  else if (variableName.equalsIgnoreCase("obj"))
 	    	  { // object
 	    		  currentToken = new Token("obj");
 	    	  }
-	        else
-	        { // VAR
-	          currentToken = new Token("Var", variableName);
-	        }
+		      else
+		      { // VAR
+		    	  currentToken = new Token("Var", variableName);
+		      }
 	      }
 	      else if (currentChar == '(')
 	      { //Lparen
@@ -143,7 +146,7 @@ public class cimpilermain {
 	   * @return String value of Integer Number.
 	   */
 	  private String readNumber() {
-		  StringBuilder sb = new StringBuilder();
+		    StringBuilder sb = new StringBuilder();
 		    char currentChar = code.charAt(currentIndex);
 		    while (currentIndex<=codeLength && Character.isDigit(currentChar)) {
 		      sb.append(currentChar);
