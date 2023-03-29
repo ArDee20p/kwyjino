@@ -16,13 +16,6 @@ class lextest {
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-	@Test
-	void test() {
-		cimpilermain a = new cimpilermain("code");
-		while(a.nextToken());
-		a.printtok();
-		assertEquals("code", a.code);
-	}
 
 	@Test
 	void testVar() {
@@ -125,7 +118,7 @@ class lextest {
 
 	@Test
 	void testComm() {
-	    cimpilermain lexer = new cimpilermain("`");
+	    cimpilermain lexer = new cimpilermain("`comment`");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("COM", lexer.getCurrentToken().getType());
 	}
@@ -143,13 +136,6 @@ class lextest {
 	    cimpilermain lexer = new cimpilermain("print");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("print", lexer.getCurrentToken().getType());}
-	@Test
-	void testb() {
-		cimpilermain a = new cimpilermain("code is 12 ds31 fujw \"\"");
-		while(a.nextToken());
-		a.printtok();
-		assertEquals("codeis12ds31fujw", a.teststring);
-	}
 
 	@Test
 	void testPrivateKeyword() {
@@ -169,39 +155,18 @@ class lextest {
 	    cimpilermain lexer = new cimpilermain("public");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("pub", lexer.getCurrentToken().getType());}
-	@Test
-	void testd() {
-		cimpilermain a = new cimpilermain("print private public obj");
-		while(a.nextToken());
-		a.printtok();
-		assertEquals("printprivpubobj", a.testtypes);
-	}
 
 	@Test
 	void testObjKeyword() {
 	    cimpilermain lexer = new cimpilermain("obj");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("obj", lexer.getCurrentToken().getType());}
-	@Test
-	void teste() {
-		cimpilermain a = new cimpilermain("obj");
-		while(a.nextToken());
-		a.printtok();
-		assertEquals("obj", a.testtypes);
-	}
 
 	@Test
 	void testRightParenthesis() {
 	    cimpilermain lexer = new cimpilermain(")");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("RP", lexer.getCurrentToken().getType());}
-	@Test
-	void testf() {
-		cimpilermain a = new cimpilermain("obj {number=72}");
-		while(a.nextToken());
-		a.printtok();
-		assertEquals("objLBVarEQNUMRB", a.testtypes);
-	}
 
 	@Test
 	void testGetPreviousToken() {
@@ -214,13 +179,6 @@ class lextest {
 	    assertEquals("EQ", currentToken.getType());
 	    assertEquals("Var", previousToken.getType());
 	    assertEquals("a", previousToken.getValue());}
-	@Test
-	void testg() {
-		cimpilermain a = new cimpilermain("stringname=\"stringvalue\"");
-		while(a.nextToken());
-		a.printtok();
-		assertEquals("VarEQSTR", a.testtypes);
-	}
 
 	@Test
 	void testUnknownToken() {
@@ -240,9 +198,53 @@ class lextest {
 	    // Check if the expected error message is printed
 	    String expectedOutput = "Token unknown at &";
 	    assertTrue(outContent.toString().contains(expectedOutput));}
+	
+	//assorted inputs testing interactions of features
+	@Test
+	void test() {
+		cimpilermain a = new cimpilermain("code");
+		while(a.nextToken());
+		a.printtok();
+		assertEquals("code", a.code);
+	}
+	@Test
+	void testb() {
+		cimpilermain a = new cimpilermain("code is 12 ds31 fujw \"\"");
+		while(a.nextToken());
+		a.printtok();
+		assertEquals("codeis12ds31fujw", a.teststring);
+	}
+	@Test
+	void testd() {
+		cimpilermain a = new cimpilermain("print private public obj");
+		while(a.nextToken());
+		a.printtok();
+		assertEquals("printprivpubobj", a.testtypes);
+	}
+	@Test
+	void teste() {
+		cimpilermain a = new cimpilermain("obj");
+		while(a.nextToken());
+		a.printtok();
+		assertEquals("obj", a.testtypes);
+	}
+	@Test
+	void testf() {
+		cimpilermain a = new cimpilermain("obj {number=72}");
+		while(a.nextToken());
+		a.printtok();
+		assertEquals("objLBVarEQNUMRB", a.testtypes);
+	}
+	@Test
+	void testg() {
+		cimpilermain a = new cimpilermain("stringname=\"stringvalue\"");
+		while(a.nextToken());
+		a.printtok();
+		assertEquals("VarEQSTR", a.testtypes);
+	}
 	@Test
 	void testj() {
-		cimpilermain a = new cimpilermain("+ - / * `");
+		cimpilermain a = new cimpilermain("+ - / * ``");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("PLMINDIVMULTCOM", a.testtypes);

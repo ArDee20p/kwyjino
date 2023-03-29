@@ -22,6 +22,7 @@ public class cimpilermain {
 	  private int currentIndex=0;
 	  private Token currentToken;
 	  private Token previousToken;
+	  private boolean UseWarnings=false;
 	  ////////////////////////////////////////////////doesn't know what an & is. May or may not be relevant later
 	   /**
 	   * Updates currentToken to the next valid Token if it is available.
@@ -66,9 +67,19 @@ public class cimpilermain {
 		        currentToken = new Token("MULT");
 		        currentIndex++;
 		      }
-	      else if (currentChar == '`') { // comment indicator
-		        currentToken = new Token("COM");
+	      else if (currentChar == '`') { // string grabber
+	    	  	currentIndex++;
+		        String variableName="";
+		        while(code.charAt(currentIndex)!='`')
+		        {
+		        	
+		        	 variableName= variableName+code.charAt(currentIndex);
+		        	 currentIndex++;
+		        	 
+		        }
 		        currentIndex++;
+		        currentToken = new Token("COM", variableName);
+		        	
 		      }
 	      else if (currentChar == '"') { // string grabber
 	    	  	currentIndex++;
@@ -122,6 +133,11 @@ public class cimpilermain {
 	      else if (currentChar == ')')
 	      { // Rparen
 	    	  currentToken = new Token("RP");
+	    	  currentIndex++;
+		  }
+	      else if (currentChar == '!')
+	      { // enable warnings instead of errors
+	    	  UseWarnings=true;
 	    	  currentIndex++;
 		  }
 	      
