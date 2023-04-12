@@ -1,7 +1,6 @@
-
-public class start {
+public class Start {
 	public static void main(String[] args) {
-		cimpilermain a = new cimpilermain("code");
+		CompilerMain a = new CompilerMain("code");
 		
 		while(a.nextToken());
 		a.printtok();

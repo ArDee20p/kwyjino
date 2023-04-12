@@ -1,3 +1,5 @@
+package tokenizer;
+
 public class Token {
 
 	  private final String type;

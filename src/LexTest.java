@@ -8,7 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-class lextest {
+import tokenizer.Token;
+
+
+class LexTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -26,7 +29,7 @@ class lextest {
 
 	@Test
 	void testNextTokenWhiteSpace() {
-	    cimpilermain lexer = new cimpilermain("a = 5");
+	    CompilerMain lexer = new CompilerMain("a = 5");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("Var", lexer.getCurrentToken().getType());
 	    assertEquals("a", lexer.getCurrentToken().getValue());
@@ -43,13 +46,13 @@ class lextest {
 
 	@Test
 	void testNextTokenEmptyInput() {
-	    cimpilermain lexer = new cimpilermain("");
+	    CompilerMain lexer = new CompilerMain("");
 	    assertFalse(lexer.nextToken());
 	}
 
 	@Test
 	void testNextTokenInvalidCharacter() {
-	    cimpilermain lexer = new cimpilermain("a@");
+	    CompilerMain lexer = new CompilerMain("a@");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("Var", lexer.getCurrentToken().getType());
 	    assertEquals("a", lexer.getCurrentToken().getValue());
@@ -57,7 +60,7 @@ class lextest {
 
 	@Test
 	void testNextTokenComplexExpression() {
-	    cimpilermain lexer = new cimpilermain("a=(5+3)*2");
+	    CompilerMain lexer = new CompilerMain("a=(5+3)*2");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("Var", lexer.getCurrentToken().getType());
 	    assertEquals("a", lexer.getCurrentToken().getValue());
@@ -76,56 +79,56 @@ class lextest {
 
 	@Test
 	void testLeftBracket() {
-	    cimpilermain lexer = new cimpilermain("{");
+	    CompilerMain lexer = new CompilerMain("{");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("LB", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testRightBracket() {
-	    cimpilermain lexer = new cimpilermain("}");
+	    CompilerMain lexer = new CompilerMain("}");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("RB", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testAddition() {
-	    cimpilermain lexer = new cimpilermain("+");
+	    CompilerMain lexer = new CompilerMain("+");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("PL", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testSubtraction() {
-	    cimpilermain lexer = new cimpilermain("-");
+	    CompilerMain lexer = new CompilerMain("-");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("MIN", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testDivision() {
-	    cimpilermain lexer = new cimpilermain("/");
+	    CompilerMain lexer = new CompilerMain("/");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("DIV", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testMultiplication() {
-	    cimpilermain lexer = new cimpilermain("*");
+	    CompilerMain lexer = new CompilerMain("*");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("MULT", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testComm() {
-	    cimpilermain lexer = new cimpilermain("`comment`");
+	    CompilerMain lexer = new CompilerMain("`comment`");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("COM", lexer.getCurrentToken().getType());
 	}
 
 	@Test
 	void testString() {
-	    cimpilermain lexer = new cimpilermain("\"hello\"");
+	    CompilerMain lexer = new CompilerMain("\"hello\"");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("STR", lexer.getCurrentToken().getType());
 	    assertEquals("hello", lexer.getCurrentToken().getValue());
@@ -133,18 +136,18 @@ class lextest {
 
 	@Test
 	void testPrintKeyword() {
-	    cimpilermain lexer = new cimpilermain("print");
+	    CompilerMain lexer = new CompilerMain("print");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("print", lexer.getCurrentToken().getType());}
 
 	@Test
 	void testPrivateKeyword() {
-	    cimpilermain lexer = new cimpilermain("private");
+	    CompilerMain lexer = new CompilerMain("private");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("priv", lexer.getCurrentToken().getType());}
 	@Test   
 	void testc() {
-		cimpilermain a = new cimpilermain("()");
+		CompilerMain a = new CompilerMain("()");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("LPRP", a.testtypes);
@@ -152,25 +155,25 @@ class lextest {
 
 	@Test
 	void testPublicKeyword() {
-	    cimpilermain lexer = new cimpilermain("public");
+	    CompilerMain lexer = new CompilerMain("public");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("pub", lexer.getCurrentToken().getType());}
 
 	@Test
 	void testObjKeyword() {
-	    cimpilermain lexer = new cimpilermain("obj");
+	    CompilerMain lexer = new CompilerMain("obj");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("obj", lexer.getCurrentToken().getType());}
 
 	@Test
 	void testRightParenthesis() {
-	    cimpilermain lexer = new cimpilermain(")");
+	    CompilerMain lexer = new CompilerMain(")");
 	    assertTrue(lexer.nextToken());
 	    assertEquals("RP", lexer.getCurrentToken().getType());}
 
 	@Test
 	void testGetPreviousToken() {
-	    cimpilermain lexer = new cimpilermain("a = 5");
+	    CompilerMain lexer = new CompilerMain("a = 5");
 	    assertTrue(lexer.nextToken()); // Token: VAR
 	    assertTrue(lexer.nextToken()); // Token: EQ
 	    Token currentToken = lexer.getCurrentToken();
@@ -183,7 +186,7 @@ class lextest {
 	@Test
 	void testUnknownToken() {
 	    String input = "a & b";
-	    cimpilermain lexer = new cimpilermain(input);
+	    CompilerMain lexer = new CompilerMain(input);
 
 	    // Set up output capture
 	    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -202,49 +205,49 @@ class lextest {
 	//assorted inputs testing interactions of features
 	@Test
 	void test() {
-		cimpilermain a = new cimpilermain("code");
+		CompilerMain a = new CompilerMain("code");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("code", a.code);
 	}
 	@Test
 	void testb() {
-		cimpilermain a = new cimpilermain("code is 12 ds31 fujw \"\"");
+		CompilerMain a = new CompilerMain("code is 12 ds31 fujw \"\"");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("codeis12ds31fujw", a.teststring);
 	}
 	@Test
 	void testd() {
-		cimpilermain a = new cimpilermain("print private public obj");
+		CompilerMain a = new CompilerMain("print private public obj");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("printprivpubobj", a.testtypes);
 	}
 	@Test
 	void teste() {
-		cimpilermain a = new cimpilermain("obj");
+		CompilerMain a = new CompilerMain("obj");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("obj", a.testtypes);
 	}
 	@Test
 	void testf() {
-		cimpilermain a = new cimpilermain("obj {number=72}");
+		CompilerMain a = new CompilerMain("obj {number=72}");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("objLBVarEQNUMRB", a.testtypes);
 	}
 	@Test
 	void testg() {
-		cimpilermain a = new cimpilermain("stringname=\"stringvalue\"");
+		CompilerMain a = new CompilerMain("stringname=\"stringvalue\"");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("VarEQSTR", a.testtypes);
 	}
 	@Test
 	void testj() {
-		cimpilermain a = new cimpilermain("+ - / * ``");
+		CompilerMain a = new CompilerMain("+ - / * ``");
 		while(a.nextToken());
 		a.printtok();
 		assertEquals("PLMINDIVMULTCOM", a.testtypes);

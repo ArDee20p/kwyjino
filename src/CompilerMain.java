@@ -1,7 +1,9 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class cimpilermain {
+import tokenizer.Token;
+
+public class CompilerMain {
 	public String code="";
 	private int codeLength=code.length();
 	public String teststring="";
@@ -15,7 +17,7 @@ public class cimpilermain {
 				testtypes=testtypes+list.get(i).getType();
 			}
 		}
-		public cimpilermain(String codeInput){
+		public CompilerMain(String codeInput){
 			code=codeInput;
 			codeLength=code.length();
 		}
