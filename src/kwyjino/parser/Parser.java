@@ -48,19 +48,12 @@ public class Parser {
 	        return new ParseResult<Program>(new Program(Statement.result), Statement.nextPosition);
 	    } // parseProgram
 	    
-	    // expression ::= num | `true` | `false` | var |
-	    //                `(` op expression expression `)`
+	    // expression ::= num | | var | `(` op expression expression `)`
 	    
 	    public ParseResult<Exp> parseExp(final int position) throws ParseException {
 	        final Token token = getToken(position);
 	        if (token instanceof NumberToken) {
 	            return new ParseResult<Exp>(new NumberLiteralExpression(((NumberToken)token).value),
-	                                        position + 1);
-	        } else if (token instanceof TrueToken) {
-	            return new ParseResult<Exp>(new BooleanLiteralExpression(true),
-	                                        position + 1);
-	        } else if (token instanceof FalseToken) {
-	            return new ParseResult<Exp>(new BooleanLiteralExpression(false),
 	                                        position + 1);
 	        } else if (token instanceof IdentifierToken) {
 	            return new ParseResult<Exp>(new VariableExpression(new Variable(((IdentifierToken)token).name)),
@@ -79,7 +72,7 @@ public class Parser {
 	        }
 	    } // parseExp
 	                                        
-	    // op ::= `+` | `-` | `*` | `/` | `<`
+	    // op ::= `+` | `-` | `*` | `/` 
 	    public ParseResult<Op> parseOp(final int position) throws ParseException {
 	        final Token token = getToken(position);
 	        Op op = null;
@@ -91,8 +84,6 @@ public class Parser {
 	            op = new MultOp();
 	        } else if (token instanceof DivToken) {
 	            op = new DivOp();
-	        } else if (token instanceof LessThanToken) {
-	            op = new LessThanOp();
 	        } else {
 	            throw new ParseException("Expected operator; received: " + token.toString());
 	        }
@@ -189,8 +180,6 @@ public class Parser {
 	        final Token token = getToken(position);
 	        if (token instanceof IntToken) {
 	            return new ParseResult<Type>(new IntType(), position + 1);
-	        } else if (token instanceof BoolToken) {
-	            return new ParseResult<Type>(new BoolType(), position + 1);
 	        } else {
 	            throw new ParseException("Expected type; received: " +
 	                                     token.toString());

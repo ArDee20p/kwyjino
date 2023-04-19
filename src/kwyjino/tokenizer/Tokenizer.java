@@ -7,10 +7,7 @@ import java.util.Map;
 public class Tokenizer {
     public static final Map<String, Token> RESERVED_WORDS = new HashMap<String, Token>() {{
             put("int", new IntToken());
-            put("bool", new BoolToken());
             put("vardec", new VardecToken());
-            put("true", new TrueToken());
-            put("false", new FalseToken());
             put("print", new PrintToken());
             put("program", new ProgramToken());
         }};
@@ -21,8 +18,6 @@ public class Tokenizer {
         new SymbolPair("=", new SingleEqualsToken()),
         new SymbolPair("+", new PlusToken()),
         new SymbolPair("-", new MinusToken()),
-        new SymbolPair("<", new LessThanToken()),
-    	new SymbolPair("!", new SuppressPrivacyErrsToken()),
         new SymbolPair("*", new MultToken()),
         new SymbolPair("/", new DivToken()),
     };
