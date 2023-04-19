@@ -1,2 +1,8 @@
-/kwyjino/
-/test/
+/Parser/
+/Tokenizer/
+/lexer/
+/parser/
+/tokenizer/
+/CompilerMain.class
+/LexTest.class
+/Start.class
