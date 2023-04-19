@@ -4,3 +4,15 @@
 /kwyjino/
 /parser/
 /tokenizer/
+/DivToken.class
+/EqualsToken.class
+/LeftBracketToken.class
+/LeftParenToken.class
+/MinusToken.class
+/MultToken.class
+/NumberToken.class
+/PlusToken.class
+/PrintToken.class
+/RightBracketToken.class
+/RightParenToken.class
+/Token.class

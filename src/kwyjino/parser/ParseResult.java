@@ -1,4 +1,4 @@
-package parser;
+package kwyjino.parser;
 
 public class ParseResult<A> {
 	public final A result;

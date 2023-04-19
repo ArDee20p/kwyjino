@@ -1,4 +1,4 @@
-package parser;
+package kwyjino.parser;
 
 // exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`
 

@@ -1,7 +1,9 @@
+package kwyjino.lexer;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import tokenizer.Token;
+import kwyjino.tokenizer.*;
 
 public class CompilerMain {
 	public String code="";
@@ -31,7 +33,17 @@ public class CompilerMain {
 	   *
 	   * @return true, if a valid token is available next.
 	   */
+	  
+	  
+	  
+	  
 	  public boolean nextToken() {
+		  if (code != null)
+			if (code.charAt(0) == '!')
+		      { // enable warnings instead of errors
+		    	  UseWarnings=true;
+		    	  currentIndex++;
+			  }
 
 	    while (currentIndex<codeLength) { 
 	    	
@@ -42,31 +54,31 @@ public class CompilerMain {
 	    	  continue;
 	      }
 	      else if (currentChar == '=') { // 2. SET
-	        currentToken = new Token("EQ");
+	        currentToken = new EqualsToken();
 	        currentIndex++;
 	      }
 	      else if (currentChar == '{') { // 2. SET
-		        currentToken = new Token("LB");
+		        currentToken = new LeftBracketToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '}') { // 2. SET
-		        currentToken = new Token("RB");
+		        currentToken = new RightBracketToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '+') { // 2. add
-		        currentToken = new Token("PL");
+		        currentToken = new PlusToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '-') { // 2. subtract
-		        currentToken = new Token("MIN");
+		        currentToken = new MinusToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '/') { // 2. divide
-		        currentToken = new Token("DIV");
+		        currentToken = new DivToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '*') { // 2. multiply
-		        currentToken = new Token("MULT");
+		        currentToken = new MultToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '`') { // string grabber
@@ -80,7 +92,6 @@ public class CompilerMain {
 		        	 
 		        }
 		        currentIndex++;
-		        currentToken = new Token("COM", variableName);
 		        	
 		      }
 	      else if (currentChar == '"') { // string grabber
@@ -99,7 +110,7 @@ public class CompilerMain {
 		      }
 	      else if (Character.isDigit(currentChar))
 	      { // 3. INT
-	    	  currentToken = new Token("NUM", readNumber());
+	    	  currentToken = new NumberToken(readNumber());
 	      }
 	      else if (Character.isLetter(currentChar))
 	      {
@@ -108,15 +119,7 @@ public class CompilerMain {
 	    	  //This is where command cases go. Print, classes, access
 	    	  if (variableName.equalsIgnoreCase("print"))
 	    	  { // PRINT
-	    		  currentToken = new Token("print");
-	    	  }
-	    	  else if (variableName.equalsIgnoreCase("private"))
-	    	  { // private modifier
-	    		  currentToken = new Token("priv");
-	    	  }
-	    	  else if (variableName.equalsIgnoreCase("public"))
-	    	  { // Public modifier
-	    		  currentToken = new Token("pub");
+	    		  currentToken = new PrintToken();
 	    	  }
 	    	  else if (variableName.equalsIgnoreCase("obj"))
 	    	  { // object
@@ -129,17 +132,22 @@ public class CompilerMain {
 	      }
 	      else if (currentChar == '(')
 	      { //Lparen
-	    	  currentToken = new Token("LP");
+	    	  currentToken = new LeftParenToken();
 	    	  currentIndex++;
 		  }
 	      else if (currentChar == ')')
 	      { // Rparen
-	    	  currentToken = new Token("RP");
+	    	  currentToken = new RightParenToken();
 	    	  currentIndex++;
 		  }
-	      else if (currentChar == '!')
-	      { // enable warnings instead of errors
-	    	  UseWarnings=true;
+	      else if (currentChar == '[')
+	      { //Lparen
+	    	  currentToken = new Token("LB");
+	    	  currentIndex++;
+		  }
+	      else if (currentChar == ']')
+	      { // Rparen
+	    	  currentToken = new Token("RB");
 	    	  currentIndex++;
 		  }
 	      

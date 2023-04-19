@@ -1,3 +1,7 @@
+package kwyjino;
+
+import kwyjino.lexer.CompilerMain;
+
 public class Start {
 	public static void main(String[] args) {
 		CompilerMain a = new CompilerMain("code");
