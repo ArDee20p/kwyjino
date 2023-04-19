@@ -1,4 +1,4 @@
-package kwyjino.parser;
+package parser;
 
 //INT is an int: '0'..'9'+ ;
 

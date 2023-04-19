@@ -1,4 +1,4 @@
-package kwyjino.parser;
+package parser;
 
 public class ClassdefExp implements Exp {
 

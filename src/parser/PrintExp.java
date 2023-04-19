@@ -1,4 +1,4 @@
-package kwyjino.parser;
+package parser;
 
 public class PrintExp implements Exp {
 

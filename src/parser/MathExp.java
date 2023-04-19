@@ -1,4 +1,4 @@
-package kwyjino.parser;
+package parser;
 
 // op::=` + `| `- `| `/ `| `*`
 public class MathExp implements Exp {
