@@ -1,4 +1,3 @@
-package kwyjino.tokenizer;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.LinkedList;
@@ -6,9 +5,6 @@ import java.util.LinkedList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import kwyjino.lexer.CompilerMain;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 

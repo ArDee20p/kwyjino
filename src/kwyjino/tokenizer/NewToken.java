@@ -1,18 +1,18 @@
 package kwyjino.tokenizer;
 
-public class RightBracketToken implements Token {
+public class NewToken implements Token {
     @Override
     public boolean equals(final Object other) {
-        return other instanceof RightBracketToken;
+        return other instanceof NewToken;
     }
 
     @Override
     public int hashCode() {
-        return 22;
+        return 8;
     }
 
     @Override
     public String toString() {
-        return "RightBracketToken";
+        return "NewToken";
     }
 }
