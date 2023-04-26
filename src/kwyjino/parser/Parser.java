@@ -41,43 +41,61 @@ public class Parser {
         }
     } // parseProgram
     
-    // program ::= statement
+    
+    //TODO: this is only sending one statement at a time, but Program expects a list of
+    // 		statements as well as a list of classdefs.
+    
+    // program::=[`!`] classdef* stmt*
     public ParseResult<Program> parseProgram(final int position) throws ParseException {
         final ParseResult<Stmt> stmt = parseStmt(position);
         return new ParseResult<Program>(new Program(stmt.result), stmt.nextPosition);
     } // parseProgram
     
-    // expression ::= num | `true` | `false` | var |
-    //                `(` op expression expression `)`
+    
+    //TODO: StringToken, VariableToken
+    // exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
+
     public ParseResult<Exp> parseExp(final int position) throws ParseException {
         final Token token = getToken(position);
+        //::= INT
         if (token instanceof NumberToken) {
-            return new ParseResult<Exp>(new NumberLiteralExp(((NumberToken)token).value),
+            return new ParseResult<Exp>(new IntegerExp(((NumberToken)token).value),
                                         position + 1);
-        } else if (token instanceof TrueToken) {
-            return new ParseResult<Exp>(new BooleanLiteralExp(true),
+        }
+        //::= String
+        else if (token instanceof StringToken) {
+            return new ParseResult<Exp>(new StringExp(((StringToken)token).name)),
                                         position + 1);
-        } else if (token instanceof FalseToken) {
-            return new ParseResult<Exp>(new BooleanLiteralExp(false),
-                                        position + 1);
-        } else if (token instanceof IdentifierToken) {
-            return new ParseResult<Exp>(new VariableExp(new Variable(((IdentifierToken)token).name)),
-                                        position + 1);
-        } else if (token instanceof LeftParenToken) {
+        } 
+        
+        //TODO: don't know how to do this one. best guess below.
+        //::= `[` exp variable `]`
+        else if (token instanceof VariableToken) {
+        	return new ParseResult<Exp>(new VariableExp(((VariableToken)token).name)),
+                    position + 1);
+        }
+        //::= `(` op exp exp `)`
+        else if (token instanceof LeftParenToken) {
             final ParseResult<Op> op = parseOp(position + 1);
             final ParseResult<Exp> left = parseExp(op.nextPosition);
             final ParseResult<Exp> right = parseExp(left.nextPosition);
-            assertTokenIs(right.nextPosition, new RightParenToken());
-            return new ParseResult<Exp>(new BinaryOperatorExp(op.result,
+            assertTokenIs(right.nextPosition, (Token) new RightParenToken());
+            return new ParseResult<Exp>(new MathExp(op.result,
                                                               left.result,
                                                               right.result),
                                         right.nextPosition + 1);
-        } else {
+        }
+        //TODO: don't know how to do this one.
+        //`new` classname `(` exp* `)`
+        else if (token instanceof ) {
+        	
+        }
+        else {
             throw new ParseException("expected expression; received: " + token.toString());
         }
     } // parseExp
                                         
-    // op ::= `+` | `-` | `&&` | `||` | `<`
+    // op::=` + `| `- `| `/ `| `*`
     public ParseResult<Op> parseOp(final int position) throws ParseException {
         final Token token = getToken(position);
         Op op = null;
@@ -85,12 +103,10 @@ public class Parser {
             op = new PlusOp();
         } else if (token instanceof MinusToken) {
             op = new MinusOp();
-        } else if (token instanceof LogicalAndToken) {
-            op = new LogicalAndOp();
-        } else if (token instanceof LogicalOrToken) {
-            op = new LogicalOrOp();
-        } else if (token instanceof LessThanToken) {
-            op = new LessThanOp();
+        } else if (token instanceof MultToken) {
+            op = new MultOp();
+        } else if (token instanceof DivToken) {
+            op = new DivOp();
         } else {
             throw new ParseException("Expected operator; received: " + token.toString());
         }
@@ -98,8 +114,9 @@ public class Parser {
         assert(op != null);
         return new ParseResult<Op>(op, position + 1);
     } // parseOp
-      
-    // var is a Variable
+    
+    //TODO: IdentifierToken?
+    // variable is variable
     public ParseResult<Variable> parseVariable(final int position) throws ParseException {
         final Token token = getToken(position);
         if (token instanceof IdentifierToken) {
@@ -110,19 +127,20 @@ public class Parser {
         }
     } // parseVariable
 
-    // print ::= `(` `print` expression `)`
+    // STMT::= `Print` exp
     public ParseResult<Stmt> parsePrint(final int position) throws ParseException {
         assertTokenIs(position, new LeftParenToken());
         assertTokenIs(position + 1, new PrintToken());
         final ParseResult<Exp> exp = parseExp(position + 2);
-        assertTokenIs(exp.nextPosition, new RightParenToken());
+        assertTokenIs(exp.nextPosition, (Token)new RightParenToken());
         return new ParseResult<Stmt>(new PrintStmt(exp.result), exp.nextPosition + 1);
     }
 
-    // progn ::= `(` `progn` statement* `)`
+    //TODO: ProgramToken
+    // program::=[`!`] classdef* stmt*
     public ParseResult<Stmt> parseProgn(int position) throws ParseException {
         assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new PrognToken());
+        assertTokenIs(position + 1, new ProgramToken());
         final List<Stmt> stmts = new ArrayList<Stmt>();
         boolean shouldRun = true;
         position += 2;
@@ -139,72 +157,61 @@ public class Parser {
         return new ParseResult<Stmt>(new PrognStmt(stmts), position + 1);
     }
     
-    // assign ::= `(` `=` var expression `)`
+    // STMT::= type variable `=` exp
     public ParseResult<Stmt> parseAssign(final int position) throws ParseException {
         assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new SingleEqualsToken());
-        final ParseResult<Variable> variable = parseVariable(position + 2);
+        assertTokenIs(position + 1, new EqualsToken());
+        final ParseResult<Type> type = parseType(position+2);
+        final ParseResult<Variable> variable = parseVariable(position + 3);
         final ParseResult<Exp> exp = parseExp(variable.nextPosition);
-        assertTokenIs(exp.nextPosition, new RightParenToken());
-        return new ParseResult<Stmt>(new AssignStmt(variable.result,
+        assertTokenIs(exp.nextPosition, (Token) new RightParenToken());
+        return new ParseResult<Stmt>(new VardefStmt(type.result, variable.result,
                                                     exp.result),
                                      exp.nextPosition + 1);
     } // parseAssign
-    
-    // loop ::= `(` `while` expression statement `)`
-    public ParseResult<Stmt> parseLoop(final int position) throws ParseException {
-        assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new WhileToken());
-        final ParseResult<Exp> guard = parseExp(position + 2);
-        final ParseResult<Stmt> body = parseStmt(guard.nextPosition);
-        assertTokenIs(body.nextPosition, new RightParenToken());
-        return new ParseResult<Stmt>(new WhileStmt(guard.result,
-                                                   body.result),
-                                     body.nextPosition + 1);
-    } // parseLoop
 
-    // vardec ::= `(` `vardec` type var expression `)`
+    //TODO: VardefToken?
+    // STMT ::= type variable `=` exp
     public ParseResult<Stmt> parseVardec(final int position) throws ParseException {
         assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new VardecToken());
+        assertTokenIs(position + 1, new VardefToken());
         final ParseResult<Type> type = parseType(position + 2);
         final ParseResult<Variable> variable = parseVariable(type.nextPosition);
         final ParseResult<Exp> exp = parseExp(variable.nextPosition);
         assertTokenIs(exp.nextPosition, new RightParenToken());
-        return new ParseResult<Stmt>(new VardecStmt(type.result,
+        return new ParseResult<Stmt>(new VardefStmt(type.result,
                                                     variable.result,
                                                     exp.result),
                                      exp.nextPosition + 1);
     } // parseVardec
 
-    // statement ::= vardec | loop | assign
+    
+    // STMT::= `Print` exp| type variable `=` exp| lhs `=` exp
     public ParseResult<Stmt> parseStmt(final int position) throws ParseException {
         try {
             return parseVardec(position);
         } catch (final ParseException e1) {
             try {
-                return parseLoop(position);
-            } catch (final ParseException e2) {
-                try {
                     return parseAssign(position);
-                } catch (final ParseException e3) {
+                } catch (final ParseException e2) {
                     try {
                         return parsePrint(position);
-                    } catch (final ParseException e4) {
+                    } catch (final ParseException e3) {
                         return parseProgn(position);
                     }
                 }
             }
-        }
     } // parseStmt
-               
-    // type ::= `int` | `bool`
+    
+    //TODO: StringToken? ClassnameToken? VarToken?
+    //		Don't know how to do this one fully, or if it's even necessary.
+    // type ::= `int` | `String` | classname | `var`
     public ParseResult<Type> parseType(final int position) throws ParseException {
         final Token token = getToken(position);
-        if (token instanceof IntToken) {
+        if (token instanceof NumberToken) {
             return new ParseResult<Type>(new IntType(), position + 1);
-        } else if (token instanceof BoolToken) {
-            return new ParseResult<Type>(new BoolType(), position + 1);
+        } else if (token instanceof StringToken) {
+            return new ParseResult<Type>(new StringType(), position + 1);
         } else {
             throw new ParseException("Expected type; received: " +
                                      token.toString());

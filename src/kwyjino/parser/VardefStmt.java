@@ -3,10 +3,10 @@ package kwyjino.parser;
 import java.util.Objects;
 
 public class VardefStmt implements Stmt {
-	public final String type;
-	public final String variable;
+	public final Type type;
+	public final Variable variable;
 	public final Exp exp;
-	public VardefStmt(String type, String variable, Exp exp) {
+	public VardefStmt(Type type, Variable variable, Exp exp) {
 		this.type = type;
 		this.variable = variable;
 		this.exp = exp;
