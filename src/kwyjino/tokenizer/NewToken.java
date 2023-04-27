@@ -12,7 +12,8 @@ public class NewToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "NewToken";
-    }
+	public String toString() {
+		return "NewToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

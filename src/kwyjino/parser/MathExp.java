@@ -32,6 +32,7 @@ public class MathExp implements Exp {
 
 	@Override
 	public String toString() {
-		return "MathExp [operator=" + operator + ", left=" + left + ", right=" + right + "]";
+		return "MathExp [operator=" + operator + ", left=" + left + ", right=" + right + ", hashCode()=" + hashCode()
+				+ ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
 	}
 }

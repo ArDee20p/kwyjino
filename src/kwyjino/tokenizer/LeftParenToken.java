@@ -12,7 +12,8 @@ public class LeftParenToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "LeftParenToken";
-    }
+	public String toString() {
+		return "LeftParenToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

@@ -1,7 +1,5 @@
 package kwyjino.parser;
 
-import kwyjino.tokenizer.DivToken;
-
 // String is a string ('a'..'z'|'A'..'Z')+ ;
 
 public class StringExp implements Exp {
@@ -27,7 +25,8 @@ public class StringExp implements Exp {
     }
     
     @Override
-    public String toString() {
-        return "StringExp(" + this.value + ")";
-    }
+	public String toString() {
+		return "StringExp [value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
+				+ ", toString()=" + super.toString() + "]";
+	}
 }

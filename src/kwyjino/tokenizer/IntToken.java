@@ -12,7 +12,8 @@ public class IntToken implements Token {
     }
     
     @Override
-    public String toString() {
-        return "IntToken";
-    }
+	public String toString() {
+		return "IntToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

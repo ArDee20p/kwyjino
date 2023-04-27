@@ -19,7 +19,8 @@ public class VariableToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "VariableToken(" + value + ")";
-    }
+	public String toString() {
+		return "VariableToken [value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
+				+ ", toString()=" + super.toString() + "]";
+	}
 }

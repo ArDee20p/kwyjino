@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import tokenizer.Token;
+import kwyjino.tokenizer.*;
+import kwyjino.lexer.*;
 
 
 class LexTest {

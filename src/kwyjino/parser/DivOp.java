@@ -12,7 +12,8 @@ public class DivOp implements Op {
     }
     
     @Override
-    public String toString() {
-        return "DivOp";
-    }
+	public String toString() {
+		return "DivOp [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

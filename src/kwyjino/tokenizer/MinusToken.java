@@ -12,7 +12,8 @@ public class MinusToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "MinusToken";
-    }
+	public String toString() {
+		return "MinusToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

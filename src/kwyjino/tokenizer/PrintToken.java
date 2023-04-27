@@ -12,7 +12,8 @@ public class PrintToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "PrintToken";
-    }
+	public String toString() {
+		return "PrintToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

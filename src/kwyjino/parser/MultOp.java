@@ -12,7 +12,8 @@ public class MultOp implements Op {
     }
     
     @Override
-    public String toString() {
-        return "MultOp";
-    }
+	public String toString() {
+		return "MultOp [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

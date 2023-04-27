@@ -22,6 +22,7 @@ public class IntType implements Type {
 
 	@Override
 	public String toString() {
-		return "IntType";
+		return "IntType [name=" + name + ", hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
 	}
 }
