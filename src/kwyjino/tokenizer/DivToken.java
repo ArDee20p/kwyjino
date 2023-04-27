@@ -12,7 +12,8 @@ public class DivToken implements Token {
     }
     
     @Override
-    public String toString() {
-        return "DivToken";
-    }
+	public String toString() {
+		return "DivToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

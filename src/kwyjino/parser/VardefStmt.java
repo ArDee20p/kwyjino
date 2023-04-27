@@ -27,7 +27,8 @@ public class VardefStmt implements Stmt {
 	}
 	@Override
 	public String toString() {
-		return "VardefStmt [type=" + type + ", variable=" + variable + ", exp=" + exp + "]";
+		return "VardefStmt [type=" + type + ", variable=" + variable + ", exp=" + exp + ", hashCode()=" + hashCode()
+				+ ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
 	}
 	
 }

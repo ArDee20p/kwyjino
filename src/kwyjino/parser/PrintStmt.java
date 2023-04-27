@@ -4,6 +4,12 @@ import java.util.Objects;
 
 public class PrintStmt implements Stmt {
 
+	@Override
+	public String toString() {
+		return "PrintStmt [exp=" + exp + ", hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
+
 	public final Exp exp;
 	
 	public PrintStmt(final Exp exp) {

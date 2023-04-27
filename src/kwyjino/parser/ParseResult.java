@@ -7,4 +7,9 @@ public class ParseResult<A> {
 		this.result = result;
 		this.nextPosition = nextPosition;
 	}
+	@Override
+	public String toString() {
+		return "ParseResult [result=" + result + ", nextPosition=" + nextPosition + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+	}
 }

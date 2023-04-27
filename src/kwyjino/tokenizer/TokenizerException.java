@@ -1,7 +1,17 @@
 package kwyjino.tokenizer;
 
+import java.util.Arrays;
+
 public class TokenizerException extends Exception {
-    public TokenizerException(final String message) {
+    @Override
+	public String toString() {
+		return "TokenizerException [getMessage()=" + getMessage() + ", getLocalizedMessage()=" + getLocalizedMessage()
+				+ ", getCause()=" + getCause() + ", toString()=" + super.toString() + ", fillInStackTrace()="
+				+ fillInStackTrace() + ", getStackTrace()=" + Arrays.toString(getStackTrace()) + ", getSuppressed()="
+				+ Arrays.toString(getSuppressed()) + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+	}
+
+	public TokenizerException(final String message) {
         super(message);
     }
 }

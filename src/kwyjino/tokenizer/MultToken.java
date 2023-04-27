@@ -12,7 +12,8 @@ public class MultToken implements Token {
     }
     
     @Override
-    public String toString() {
-        return "MultToken";
-    }
+	public String toString() {
+		return "MultToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

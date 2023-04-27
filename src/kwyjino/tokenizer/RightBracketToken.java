@@ -12,7 +12,8 @@ public class RightBracketToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "RightBracketToken";
-    }
+	public String toString() {
+		return "RightBracketToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

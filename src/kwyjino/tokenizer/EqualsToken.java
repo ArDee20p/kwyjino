@@ -12,7 +12,8 @@ public class EqualsToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "SingleEqualsToken";
-    }
+	public String toString() {
+		return "EqualsToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

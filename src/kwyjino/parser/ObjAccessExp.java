@@ -24,7 +24,8 @@ public class ObjAccessExp implements Exp {
 	}
 	@Override
 	public String toString() {
-		return "ObjAccessExp [exp=" + exp + ", variable=" + variable + "]";
+		return "ObjAccessExp [exp=" + exp + ", variable=" + variable + ", hashCode()=" + hashCode() + ", getClass()="
+				+ getClass() + ", toString()=" + super.toString() + "]";
 	}
 	
 }
