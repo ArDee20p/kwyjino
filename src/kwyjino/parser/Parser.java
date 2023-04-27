@@ -6,6 +6,15 @@ import java.util.List;
 import java.lang.String;
 import kwyjino.tokenizer.*;
 
+/*
+ * Classname is an obj
+ * type::=`string`|`int`| classname|`var`	Types are inferred with ‘VAR’; can be STRING or INT
+ * exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
+ * STMT::= lhs `=` exp
+ * lhs ::= variable | `[` lhs variable `]`
+
+ */
+
 public class Parser {
     private final Token[] tokens;
     
@@ -30,6 +39,17 @@ public class Parser {
         }
     } // assertTokenIs
 
+    // variable is variable
+    public ParseResult<Variable> parseVariable(final int position) throws ParseException {
+        final Token token = getToken(position);
+        if (token instanceof VariableToken) {
+            return new ParseResult<Variable>(new Variable(((VariableToken)token).value),
+                                             position + 1);
+        } else {
+            throw new ParseException("Expected variable; received: " + token.toString());
+        }
+    } // parseVariable
+    
     public static Program parseProgram(final Token[] tokens) throws ParseException {
         final Parser parser = new Parser(tokens);
         final ParseResult<Program> program = parser.parseProgram(0);
@@ -41,18 +61,94 @@ public class Parser {
         }
     } // parseProgram
     
-    
-    //TODO: this is only sending one statement at a time, but Program expects a list of
-    // 		statements as well as a list of classdefs.
-    
     // program::=[`!`] classdef* stmt*
     public ParseResult<Program> parseProgram(final int position) throws ParseException {
-        final ParseResult<Stmt> stmt = parseStmt(position);
-        return new ParseResult<Program>(new Program(stmt.result), stmt.nextPosition);
+        final ParseResult<List<Stmt>> stmts = parseStmts(position);
+        final ParseResult<List<Classdef>> classdefs = parseClassdefs(position);
+        return new ParseResult<Program>(new Program(classdefs.result, stmts.result), stmts.nextPosition);
     } // parseProgram
     
-    
-    //TODO: StringToken, VariableToken
+    // stmt*
+    public ParseResult<List<Stmt>> parseStmts(int position) {
+        final List<Stmt> stmts = new ArrayList<Stmt>();
+        boolean shouldRun = true;
+        while (shouldRun) {
+            try {
+                final ParseResult<Stmt> stmt = parseStmt(position);
+                stmts.add(stmt.result);
+                position = stmt.nextPosition;
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+        return new ParseResult<List<Stmt>>(stmts, position);
+	}
+
+    // classdef*
+	public ParseResult<List<Classdef>> parseClassdefs(int position) {
+		final List<Classdef> classdefs = new ArrayList<Classdef>();
+        boolean shouldRun = true;
+        while (shouldRun) {
+            try {
+                final ParseResult<Classdef> classdef = parseClassdef(position);
+                classdefs.add(classdef.result);
+                position = classdef.nextPosition;
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+        return new ParseResult<List<Classdef>>(classdefs, position);
+	}
+
+	//TODO: LeftCurlyToken, RightCurlyToken
+	//classdef::=`obj` classname`{`(type variable)*`}`
+	public ParseResult<Classdef> parseClassdef(int position) throws ParseException {
+		
+		final String classname;
+		assertTokenIs(position, new ObjToken());
+		final Token token = getToken(position+1);
+		if (token instanceof VariableToken) {
+			classname = ((VariableToken)token).value;
+		}
+		else {
+			throw new ParseException("Unexpected token at position: " + (position+1));
+		}
+		assertTokenIs(position + 2, new LeftCurlyToken());
+
+        final ParseResult<List<VardeclareStmt>> vardeclares = parseVardeclares(position + 3);
+        
+        position = vardeclares.nextPosition;
+        
+        assertTokenIs(position, new RightCurlyToken());
+                
+        final Classdef classdef = new Classdef(classname, vardeclares.result);
+        return new ParseResult<Classdef>(classdef, position+1);
+	}
+	
+	//type variable
+	public ParseResult<VardeclareStmt> parseVardeclare(int position) throws ParseException  {
+		
+		final 
+		
+		return ParseResult<VardeclareStmt>();
+	}
+	
+	//(type variable)*
+	public ParseResult<List<VardeclareStmt>> parseVardeclares(int position) {
+		final List<VardeclareStmt> vardeclares = new ArrayList<VardeclareStmt>();
+        boolean shouldRun = true;
+        while (shouldRun) {
+            try {
+                final ParseResult<VardeclareStmt> vardeclare = parseVardeclare(position);
+                vardeclares.add(vardeclare.result);
+                position = vardeclare.nextPosition;
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+        return new ParseResult<List<VardeclareStmt>>(vardeclares, position);
+	}
+
     // exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
 
     public ParseResult<Exp> parseExp(final int position) throws ParseException {
@@ -114,97 +210,37 @@ public class Parser {
         assert(op != null);
         return new ParseResult<Op>(op, position + 1);
     } // parseOp
-    
-    //TODO: IdentifierToken?
-    // variable is variable
-    public ParseResult<Variable> parseVariable(final int position) throws ParseException {
-        final Token token = getToken(position);
-        if (token instanceof IdentifierToken) {
-            return new ParseResult<Variable>(new Variable(((IdentifierToken)token).name),
-                                             position + 1);
-        } else {
-            throw new ParseException("Expected variable; received: " + token.toString());
-        }
-    } // parseVariable
 
     // STMT::= `Print` exp
     public ParseResult<Stmt> parsePrint(final int position) throws ParseException {
-        assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new PrintToken());
-        final ParseResult<Exp> exp = parseExp(position + 2);
-        assertTokenIs(exp.nextPosition, (Token)new RightParenToken());
-        return new ParseResult<Stmt>(new PrintStmt(exp.result), exp.nextPosition + 1);
-    }
-
-    //TODO: ProgramToken
-    // program::=[`!`] classdef* stmt*
-    public ParseResult<Stmt> parseProgn(int position) throws ParseException {
-        assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new ProgramToken());
-        final List<Stmt> stmts = new ArrayList<Stmt>();
-        boolean shouldRun = true;
-        position += 2;
-        while (shouldRun) {
-            try {
-                final ParseResult<Stmt> stmt = parseStmt(position);
-                stmts.add(stmt.result);
-                position = stmt.nextPosition;
-            } catch (final ParseException e) {
-                shouldRun = false;
-            }
-        }
-        assertTokenIs(position, new RightParenToken());
-        return new ParseResult<Stmt>(new PrognStmt(stmts), position + 1);
+        assertTokenIs(position, new PrintToken());
+        final ParseResult<Exp> exp = parseExp(position + 1);
+        return new ParseResult<Stmt>(new PrintStmt(exp.result), exp.nextPosition);
     }
     
     // STMT::= type variable `=` exp
-    public ParseResult<Stmt> parseAssign(final int position) throws ParseException {
-        assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new EqualsToken());
-        final ParseResult<Type> type = parseType(position+2);
-        final ParseResult<Variable> variable = parseVariable(position + 3);
+    public ParseResult<Stmt> parseVardec(final int position) throws ParseException {
+        final ParseResult<Type> type = parseType(position);
+        final ParseResult<Variable> variable = parseVariable(position + 1);
+        assertTokenIs(position + 2, new EqualsToken());
         final ParseResult<Exp> exp = parseExp(variable.nextPosition);
-        assertTokenIs(exp.nextPosition, (Token) new RightParenToken());
         return new ParseResult<Stmt>(new VardefStmt(type.result, variable.result,
                                                     exp.result),
                                      exp.nextPosition + 1);
     } // parseAssign
 
-    //TODO: VardefToken?
-    // STMT ::= type variable `=` exp
-    public ParseResult<Stmt> parseVardec(final int position) throws ParseException {
-        assertTokenIs(position, new LeftParenToken());
-        assertTokenIs(position + 1, new VardefToken());
-        final ParseResult<Type> type = parseType(position + 2);
-        final ParseResult<Variable> variable = parseVariable(type.nextPosition);
-        final ParseResult<Exp> exp = parseExp(variable.nextPosition);
-        assertTokenIs(exp.nextPosition, new RightParenToken());
-        return new ParseResult<Stmt>(new VardefStmt(type.result,
-                                                    variable.result,
-                                                    exp.result),
-                                     exp.nextPosition + 1);
-    } // parseVardec
-
-    
+    // TODO: lhs `=` exp
     // STMT::= `Print` exp| type variable `=` exp| lhs `=` exp
     public ParseResult<Stmt> parseStmt(final int position) throws ParseException {
         try {
             return parseVardec(position);
         } catch (final ParseException e1) {
-            try {
-                    return parseAssign(position);
-                } catch (final ParseException e2) {
-                    try {
-                        return parsePrint(position);
-                    } catch (final ParseException e3) {
-                        return parseProgn(position);
-                    }
-                }
-            }
+        	try {
+        		return parsePrint(position);
+                } catch (final ParseException e2);
+        }
     } // parseStmt
     
-    //TODO: StringToken? ClassnameToken? VarToken?
-    //		Don't know how to do this one fully, or if it's even necessary.
     // type ::= `int` | `String` | classname | `var`
     public ParseResult<Type> parseType(final int position) throws ParseException {
         final Token token = getToken(position);

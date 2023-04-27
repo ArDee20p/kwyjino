@@ -6,10 +6,10 @@ import java.util.Objects;
 //program::=[`!`] classdef* stmt*
 
 public class Program {
-	public final List<NewExp> classdefs;
+	public final List<Classdef> classdefs;
 	public final List<Stmt> stmts;
 	
-	public Program(List<NewExp> classdefs, List<Stmt> stmts) {
+	public Program(List<Classdef> classdefs, List<Stmt> stmts) {
 		this.classdefs = classdefs;
 		this.stmts = stmts;
 	}

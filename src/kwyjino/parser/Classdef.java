@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public class Classdef {
 	public final String classname;
-	public final List<VardefStmt> vardefs;
-	public Classdef(String classname, List<VardefStmt> vardefs) {
+	public final List<VardeclareStmt> vardefs;
+	public Classdef(String classname, List<VardeclareStmt> vardefs) {
 		this.classname = classname;
 		this.vardefs = vardefs;
 	}
