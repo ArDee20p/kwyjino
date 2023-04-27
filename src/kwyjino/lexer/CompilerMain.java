@@ -62,11 +62,11 @@ public class CompilerMain {
 	        currentIndex++;
 	      }
 	      else if (currentChar == '{') { // 2. SET
-		        currentToken = new LeftBracketToken();
+		        currentToken = new LeftCurlyBracketToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '}') { // 2. SET
-		        currentToken = new RightBracketToken();
+		        currentToken = new RightCurlyBracketToken();
 		        currentIndex++;
 		      }
 	      else if (currentChar == '+') { // 2. add
