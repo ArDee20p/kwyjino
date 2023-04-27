@@ -6,14 +6,16 @@ import java.util.List;
 import java.lang.String;
 import kwyjino.tokenizer.*;
 
-/*
- * Classname is an obj
- * type::=`string`|`int`| classname|`var`	Types are inferred with ‘VAR’; can be STRING or INT
+/* missing grammar coverage: 
  * exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
+ * 
  * STMT::= lhs `=` exp
+ * 
  * lhs ::= variable | `[` lhs variable `]`
 
  */
+
+//TODO: we're missing descriptive ParseExceptions for most of the methods. should be added for ez debug.
 
 public class Parser {
     private final Token[] tokens;
@@ -39,6 +41,30 @@ public class Parser {
         }
     } // assertTokenIs
 
+    //this is the important bit, the starter for the parser. pass it a list of Tokens.
+    public static Program parseProgram(final Token[] tokens) throws ParseException {
+        final Parser parser = new Parser(tokens);
+        final ParseResult<Program> program = parser.parseProgn(0);
+        if (program.nextPosition == tokens.length) {
+            return program.result;
+        } else {
+            throw new ParseException("Remaining tokens at end, starting with: " +
+                                     parser.getToken(program.nextPosition).toString());
+        }
+    } // parseProgram
+    
+	//TODO: don't we need some kind of token for `!`?
+    // program::=[`!`] classdef* stmt*
+    public ParseResult<Program> parseProgn(int position) throws ParseException {
+    	assertTokenIs(position, new LeftBracketToken());
+    	//assertTokenIs(position+1, new ExclamToken());
+    	assertTokenIs(position+2, new RightBracketToken());
+        final ParseResult<List<Classdef>> classdefs = parseClassdefs(position+3);
+        position = classdefs.nextPosition;
+        final ParseResult<List<Stmt>> stmts = parseStmts(position);
+        return new ParseResult<Program>(new Program(classdefs.result, stmts.result), stmts.nextPosition);
+    } // parseProgram
+    
     // variable is variable
     public ParseResult<Variable> parseVariable(final int position) throws ParseException {
         final Token token = getToken(position);
@@ -49,24 +75,6 @@ public class Parser {
             throw new ParseException("Expected variable; received: " + token.toString());
         }
     } // parseVariable
-    
-    public static Program parseProgram(final Token[] tokens) throws ParseException {
-        final Parser parser = new Parser(tokens);
-        final ParseResult<Program> program = parser.parseProgram(0);
-        if (program.nextPosition == tokens.length) {
-            return program.result;
-        } else {
-            throw new ParseException("Remaining tokens at end, starting with: " +
-                                     parser.getToken(program.nextPosition).toString());
-        }
-    } // parseProgram
-    
-    // program::=[`!`] classdef* stmt*
-    public ParseResult<Program> parseProgram(final int position) throws ParseException {
-        final ParseResult<List<Stmt>> stmts = parseStmts(position);
-        final ParseResult<List<Classdef>> classdefs = parseClassdefs(position);
-        return new ParseResult<Program>(new Program(classdefs.result, stmts.result), stmts.nextPosition);
-    } // parseProgram
     
     // stmt*
     public ParseResult<List<Stmt>> parseStmts(int position) {
@@ -100,7 +108,6 @@ public class Parser {
         return new ParseResult<List<Classdef>>(classdefs, position);
 	}
 
-	//TODO: LeftCurlyToken, RightCurlyToken
 	//classdef::=`obj` classname`{`(type variable)*`}`
 	public ParseResult<Classdef> parseClassdef(int position) throws ParseException {
 		
@@ -113,13 +120,13 @@ public class Parser {
 		else {
 			throw new ParseException("Unexpected token at position: " + (position+1));
 		}
-		assertTokenIs(position + 2, new LeftCurlyToken());
+		assertTokenIs(position + 2, new LeftCurlyBracketToken());
 
         final ParseResult<List<VardeclareStmt>> vardeclares = parseVardeclares(position + 3);
         
         position = vardeclares.nextPosition;
         
-        assertTokenIs(position, new RightCurlyToken());
+        assertTokenIs(position, new RightCurlyBracketToken());
                 
         final Classdef classdef = new Classdef(classname, vardeclares.result);
         return new ParseResult<Classdef>(classdef, position+1);
@@ -128,9 +135,12 @@ public class Parser {
 	//type variable
 	public ParseResult<VardeclareStmt> parseVardeclare(int position) throws ParseException  {
 		
-		final 
+		final Type type;
+		final Variable variable;
 		
-		return ParseResult<VardeclareStmt>();
+		
+		final VardeclareStmt vardeclare = new VardeclareStmt(type, variable);
+		return new ParseResult<VardeclareStmt>(vardeclare, position+1);
 	}
 	
 	//(type variable)*
@@ -183,7 +193,7 @@ public class Parser {
         }
         //TODO: don't know how to do this one.
         //`new` classname `(` exp* `)`
-        else if (token instanceof ) {
+        else if (token instanceof NewToken) {
         	
         }
         else {
@@ -241,7 +251,7 @@ public class Parser {
         }
     } // parseStmt
     
-    // type ::= `int` | `String` | classname | `var`
+    // type ::= `int` | `String`
     public ParseResult<Type> parseType(final int position) throws ParseException {
         final Token token = getToken(position);
         if (token instanceof NumberToken) {
