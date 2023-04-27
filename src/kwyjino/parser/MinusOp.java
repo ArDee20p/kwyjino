@@ -13,7 +13,8 @@ public class MinusOp implements Op {
     }
     
     @Override
-    public String toString() {
-        return "MinusOp";
-    }
+	public String toString() {
+		return "MinusOp [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

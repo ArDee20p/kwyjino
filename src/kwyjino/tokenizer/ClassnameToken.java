@@ -12,7 +12,8 @@ public class ClassnameToken implements Token {
     }
     
     @Override
-    public String toString() {
-        return "ClassnameToken";
-    }
+	public String toString() {
+		return "ClassnameToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

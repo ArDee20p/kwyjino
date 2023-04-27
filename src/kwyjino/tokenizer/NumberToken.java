@@ -19,7 +19,8 @@ public class NumberToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "NumberToken(" + value + ")";
-    }
+	public String toString() {
+		return "NumberToken [value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
+				+ ", toString()=" + super.toString() + "]";
+	}
 }

@@ -12,7 +12,8 @@ public class PlusToken implements Token {
     }
     
     @Override
-    public String toString() {
-        return "PlusToken";
-    }
+	public String toString() {
+		return "PlusToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

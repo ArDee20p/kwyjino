@@ -12,7 +12,8 @@ public class ObjToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "ObjToken";
-    }
+	public String toString() {
+		return "ObjToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

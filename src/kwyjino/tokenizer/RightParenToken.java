@@ -12,7 +12,8 @@ public class RightParenToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "RightParenToken";
-    }
+	public String toString() {
+		return "RightParenToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

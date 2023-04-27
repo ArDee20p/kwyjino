@@ -12,7 +12,8 @@ public class LeftBracketToken implements Token {
     }
 
     @Override
-    public String toString() {
-        return "LeftBracketToken";
-    }
+	public String toString() {
+		return "LeftBracketToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
+				+ super.toString() + "]";
+	}
 }

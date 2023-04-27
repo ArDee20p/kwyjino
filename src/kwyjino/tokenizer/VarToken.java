@@ -12,7 +12,8 @@ public class VarToken implements Token {
     }
     
     @Override
-    public String toString() {
-        return "VarToken";
-    }
+	public String toString() {
+		return "VarToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
+				+ "]";
+	}
 }

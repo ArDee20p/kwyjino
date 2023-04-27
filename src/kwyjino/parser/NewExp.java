@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class NewExp implements Exp {
+	@Override
+	public String toString() {
+		return "NewExp [classname=" + classname + ", expressions=" + expressions + ", hashCode()=" + hashCode()
+				+ ", getClass()=" + getClass() + ", toString()=" + super.toString() + "]";
+	}
+
 	public final String classname;
 	public final List<Exp> expressions;
 	
