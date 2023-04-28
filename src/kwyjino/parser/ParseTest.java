@@ -25,8 +25,8 @@ public class ParseTest {
 				new IntToken(),
 		};
 		final Parser parser = new Parser(input);
-		assertEquals(new ParseResult<Type>(new IntType(), 1),
-		parser.parseType(0));
+		assertEquals(new ParseResult<Type>(new IntType(), 1).toString(),
+		parser.parseType(0).toString());
 	}
 	
 	//parseVardec
@@ -38,10 +38,37 @@ public class ParseTest {
 				new VariableToken("x"),
 		};
 		final Parser parser = new Parser(input);
-		assertEquals(new ParseResult<VardeclareStmt>(new VardeclareStmt(new IntType(), new Variable("x")), 1),
-		parser.parseVardec(0));
+		assertEquals(new ParseResult<VardeclareStmt>(new VardeclareStmt(new IntType(), new Variable("x")), 1).toString(),
+		parser.parseVardec(0).toString());
 	}
 	
-	
-	
+	//parseOp
+	@Test
+	public void testParseOp() throws ParseException {
+		final Token[] input = new Token[] {
+				new PlusToken(),
+				new MinusToken(),
+				new MultToken(),
+				new DivToken()
+		};
+		final Parser parser = new Parser(input);
+		for (int i = 0; i < input.length; i++) {
+			if (input[i] instanceof PlusToken) {
+				assertEquals(new ParseResult<Op>(new PlusOp(), i+1).toString(),
+						parser.parseOp(i).toString());
+			}
+			else if (input[i] instanceof MinusToken) {
+				assertEquals(new ParseResult<Op>(new MinusOp(), i+1).toString(),
+						parser.parseOp(i).toString());
+			}
+			else if (input[i] instanceof MultToken) {
+				assertEquals(new ParseResult<Op>(new MultOp(), i+1).toString(),
+						parser.parseOp(i).toString());
+			}
+			else if (input[i] instanceof DivToken) {
+				assertEquals(new ParseResult<Op>(new DivOp(), i+1).toString(),
+						parser.parseOp(i).toString());
+			}
+		}
+	}
 }
