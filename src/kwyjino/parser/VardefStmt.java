@@ -11,6 +11,13 @@ public class VardefStmt implements Stmt {
 		this.variable = variable;
 		this.exp = exp;
 	}
+	
+	public VardefStmt() {
+		this.type = new StringType();
+		this.variable = new Variable("");
+		this.exp = new IntegerExp(0);
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(exp, type, variable);

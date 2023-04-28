@@ -15,9 +15,15 @@ public class MathExp implements Exp {
 		this.right = right;
 	}
 	
+	public MathExp() {
+		this.operator = new PlusOp();
+		this.left = new IntegerExp(0);
+		this.right = new IntegerExp(0);
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(left, operator, right);
+		return 420808;
 	}
 	@Override
 	public boolean equals(Object obj) {

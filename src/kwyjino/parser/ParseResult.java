@@ -12,5 +12,4 @@ public class ParseResult<A> {
 		return "ParseResult [result=" + result + ", nextPosition=" + nextPosition + ", getClass()=" + getClass()
 				+ /*", hashCode()=" + hashCode() + ", toString()=" + super.toString() +*/ "]";
 	}
-	//TODO: why is hashCode() and super.toString() causing issues here?
 }

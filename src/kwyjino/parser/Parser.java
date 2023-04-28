@@ -15,9 +15,10 @@ import kwyjino.tokenizer.*;
 
  */
 
-//TODO: we're missing descriptive ParseExceptions for most of the methods. should be added for ez debug.
-
-//TODO: parseStmt is kind of messed up right now.
+/*
+ * TODO: we're missing descriptive ParseExceptions for most of the methods.
+ * Should be added later for easier debugging.
+ */
 
 public class Parser {
     private final Token[] tokens;
@@ -55,11 +56,10 @@ public class Parser {
         }
     } // parseProgram
     
-	//TODO: don't we need some kind of token for `!`?
     // program::=[`!`] classdef* stmt*
     public ParseResult<Program> parseProgn(int position) throws ParseException {
     	assertTokenIs(position, new LeftBracketToken());
-    	//assertTokenIs(position+1, new ExclamToken());
+    	assertTokenIs(position+1, new VariableToken("!"));
     	assertTokenIs(position+2, new RightBracketToken());
         final ParseResult<List<Classdef>> classdefs = parseClassdefs(position+3);
         position = classdefs.nextPosition;
@@ -94,6 +94,9 @@ public class Parser {
         return new ParseResult<List<Stmt>>(stmts, position);
 	}
 
+    /*TODO: Classdef as it sits would theoretically work, but the below
+     * code is reliant on VardecStatement, which isn't verified to work.
+     */
     // classdef*
 	public ParseResult<List<Classdef>> parseClassdefs(int position) {
 		final List<Classdef> classdefs = new ArrayList<Classdef>();
@@ -134,7 +137,7 @@ public class Parser {
         return new ParseResult<Classdef>(classdef, position+1);
 	}
 	
-	//TODO: unfinished
+	//TODO: VardeclareStmt is unfinished, affecting Classdef and Program.
 	//type variable
 	public ParseResult<VardeclareStmt> parseVardeclare(int position) throws ParseException  {
 		
@@ -176,7 +179,7 @@ public class Parser {
                                         position + 1);
         } 
         
-        //TODO: don't know how to do this one, or what this necessarily represents...best guess below.
+        //TODO: don't know how to do VardecExp...best guess below.
         //::= `[` exp variable `]`
         /*else if (token instanceof LeftBracketToken) {
         	final ParseResult<Exp> exp = parseExp(position+1);
@@ -192,14 +195,15 @@ public class Parser {
             final ParseResult<Op> op = parseOp(position + 1);
             final ParseResult<Exp> left = parseExp(op.nextPosition);
             final ParseResult<Exp> right = parseExp(left.nextPosition);
-            assertTokenIs(right.nextPosition, (Token) new RightParenToken());
+            position = right.nextPosition;
+            assertTokenIs(position, (Token) new RightParenToken());
             return new ParseResult<Exp>(new MathExp(op.result,
                                                               left.result,
                                                               right.result),
-                                        right.nextPosition + 1);
+                                        position + 1);
         }
         
-        //TODO: this might need a second look.
+        //TODO: NewToken branch of parseExp might need a second look.
         //`new` classname `(` exp* `)`
         else if (token instanceof NewToken) {
         	assertTokenIs(position+1, new ClassnameToken());
@@ -269,7 +273,7 @@ public class Parser {
                                      exp.nextPosition + 1);
     } // parseAssign
 
-    // TODO: lhs `=` exp
+    // TODO: "lhs `=` exp" portion of parseStmt.
     // STMT::= `Print` exp| type variable `=` exp| lhs `=` exp
     public ParseResult<Stmt> parseStmt(final int position) throws ParseException {
         try {

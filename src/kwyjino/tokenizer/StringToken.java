@@ -4,7 +4,6 @@ public class StringToken implements Token {
 	public String value="";
 	public StringToken(String variableName) {
 		this.value=variableName;
-		// TODO Auto-generated constructor stub
 	}
 	
 
