@@ -17,6 +17,8 @@ import kwyjino.tokenizer.*;
 
 //TODO: we're missing descriptive ParseExceptions for most of the methods. should be added for ez debug.
 
+//TODO: parseStmt is kind of messed up right now.
+
 public class Parser {
     private final Token[] tokens;
     
@@ -132,12 +134,12 @@ public class Parser {
         return new ParseResult<Classdef>(classdef, position+1);
 	}
 	
+	//TODO: unfinished
 	//type variable
 	public ParseResult<VardeclareStmt> parseVardeclare(int position) throws ParseException  {
 		
-		final Type type;
-		final Variable variable;
-		
+		final Type type = parseType(position).result;
+		final Variable variable = parseVariable(position+1).result;
 		
 		final VardeclareStmt vardeclare = new VardeclareStmt(type, variable);
 		return new ParseResult<VardeclareStmt>(vardeclare, position+1);
@@ -161,7 +163,7 @@ public class Parser {
 
     // exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
 
-    public ParseResult<Exp> parseExp(final int position) throws ParseException {
+    public ParseResult<Exp> parseExp(int position) throws ParseException {
         final Token token = getToken(position);
         //::= INT
         if (token instanceof NumberToken) {
@@ -170,16 +172,21 @@ public class Parser {
         }
         //::= String
         else if (token instanceof StringToken) {
-            return new ParseResult<Exp>(new StringExp(((StringToken)token).name)),
+            return new ParseResult<Exp>(new StringExp(((StringToken)token).value),
                                         position + 1);
         } 
         
-        //TODO: don't know how to do this one. best guess below.
+        //TODO: don't know how to do this one, or what this necessarily represents...best guess below.
         //::= `[` exp variable `]`
-        else if (token instanceof VariableToken) {
-        	return new ParseResult<Exp>(new VariableExp(((VariableToken)token).name)),
+        /*else if (token instanceof LeftBracketToken) {
+        	final ParseResult<Exp> exp = parseExp(position+1);
+        	final ParseResult<Variable> variable = parseVariable(exp.nextPosition);
+        	assertTokenIs(variable.nextPosition, (Token) new RightBracketToken());
+        	
+        	return new ParseResult<Exp>(new VardecExp(((VariableToken)token).name)),
                     position + 1);
-        }
+        }*/
+        
         //::= `(` op exp exp `)`
         else if (token instanceof LeftParenToken) {
             final ParseResult<Op> op = parseOp(position + 1);
@@ -191,15 +198,38 @@ public class Parser {
                                                               right.result),
                                         right.nextPosition + 1);
         }
-        //TODO: don't know how to do this one.
+        
+        //TODO: this might need a second look.
         //`new` classname `(` exp* `)`
         else if (token instanceof NewToken) {
-        	
+        	assertTokenIs(position+1, new ClassnameToken());
+        	String classname = getToken(position+1).toString();
+        	assertTokenIs(position+2, new LeftParenToken());
+        	final ParseResult<List<Exp>> exps = parseExps(position+3);
+        	position = exps.nextPosition;
+        	assertTokenIs(position, new RightParenToken());
+        	return new ParseResult<Exp>(new ClassdefExp(classname), position + 1);
         }
         else {
             throw new ParseException("expected expression; received: " + token.toString());
         }
     } // parseExp
+    
+    public ParseResult<List<Exp>> parseExps(int position) {
+    	final List<Exp> exps = new ArrayList<Exp>();
+    	boolean shouldRun = true;
+        while (shouldRun) {
+            try {
+                final ParseResult<Exp> exp = parseExp(position);
+                exps.add(exp.result);
+                position = exp.nextPosition;
+            } catch (final ParseException e) {
+                shouldRun = false;
+            }
+        }
+    	
+    	return new ParseResult<List<Exp>>(exps, position);
+    }
                                         
     // op::=` + `| `- `| `/ `| `*`
     public ParseResult<Op> parseOp(final int position) throws ParseException {
@@ -245,9 +275,7 @@ public class Parser {
         try {
             return parseVardec(position);
         } catch (final ParseException e1) {
-        	try {
         		return parsePrint(position);
-                } catch (final ParseException e2);
         }
     } // parseStmt
     

@@ -1,9 +1,9 @@
 package kwyjino.tokenizer;
 
 public class StringToken implements Token {
-	String Value="";
+	public String value="";
 	public StringToken(String variableName) {
-		this.Value=variableName;
+		this.value=variableName;
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -20,7 +20,7 @@ public class StringToken implements Token {
     
     @Override
 	public String toString() {
-		return "StringToken [Value=" + Value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
+		return "StringToken [Value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
 				+ ", toString()=" + super.toString() + "]";
 	}
 }

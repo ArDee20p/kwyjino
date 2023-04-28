@@ -8,4 +8,8 @@ public class ClassdefExp implements Exp {
 				+ super.toString() + "]";
 	}
 
+	public final String name;
+	public ClassdefExp(final String name) {
+		this.name = name;
+	}
 }
