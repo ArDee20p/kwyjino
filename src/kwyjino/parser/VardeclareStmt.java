@@ -9,6 +9,11 @@ public class VardeclareStmt {
 		this.type = type;
 		this.variable = variable;
 	}
+	
+	public VardeclareStmt() {
+		this.type = new StringType();
+		this.variable = new Variable("");
+	}
 	@Override
 	public String toString() {
 		return "VardeclareStmt [type=" + type + ", variable=" + variable + "]";

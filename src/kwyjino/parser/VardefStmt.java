@@ -12,15 +12,9 @@ public class VardefStmt implements Stmt {
 		this.exp = exp;
 	}
 	
-	public VardefStmt() {
-		this.type = new StringType();
-		this.variable = new Variable("");
-		this.exp = new IntegerExp(0);
-	}
-	
 	@Override
 	public int hashCode() {
-		return Objects.hash(exp, type, variable);
+		return 98312;
 	}
 	@Override
 	public boolean equals(Object obj) {

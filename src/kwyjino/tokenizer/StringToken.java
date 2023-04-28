@@ -6,6 +6,8 @@ public class StringToken implements Token {
 		this.value=variableName;
 	}
 	
+	public StringToken() {
+	}
 
 	@Override
     public boolean equals(final Object other) {

@@ -14,12 +14,6 @@ public class MathExp implements Exp {
 		this.left = left;
 		this.right = right;
 	}
-	
-	public MathExp() {
-		this.operator = new PlusOp();
-		this.left = new IntegerExp(0);
-		this.right = new IntegerExp(0);
-	}
 
 	@Override
 	public int hashCode() {

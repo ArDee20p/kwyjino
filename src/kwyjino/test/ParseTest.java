@@ -22,14 +22,85 @@ public class ParseTest {
 		assertEquals(new PlusOp(), new PlusOp());
 		assertEquals(new MinusOp(), new MinusOp());
 		assertEquals(new LeftBracketToken(), new LeftBracketToken());
-		assertEquals(new RightCurlyBracketToken(), new RightCurlyBracketToken());
 		assertEquals(new RightBracketToken(), new RightBracketToken());
-		assertEquals(new LeftCurlyBracketToken(), new LeftCurlyBracketToken());
+		assertEquals(new RightCurlyBracketToken().toString(), new RightCurlyBracketToken().toString());
+		assertEquals(new LeftCurlyBracketToken().toString(), new LeftCurlyBracketToken().toString());
 	}
 	
-	@Test public void testExpEquality() {
-		assertEquals(new MathExp(), new MathExp());
-		assertEquals(new VardefStmt(), new VardefStmt());
+	@Test
+	public void testVardefEquality() {
+		VardefStmt vardef = new VardefStmt(new StringType(), new Variable(""), new IntegerExp(0));
+		assertEquals(vardef , vardef);
+		assertEquals(new VardefStmt(new StringType(), new Variable(""), new IntegerExp(0)),
+					 new VardefStmt(new StringType(), new Variable(""), new IntegerExp(0)));
+		assertEquals(vardef.toString() , vardef.toString());
+	}
+	
+	@Test
+	public void testVardecEquality() {
+		VardeclareStmt vardec = new VardeclareStmt(new IntType(), new Variable("x"));
+		assertEquals(vardec, vardec);
+		assertEquals(new VardeclareStmt(new IntType(), new Variable("x")), new VardeclareStmt(new IntType(), new Variable("x")));
+		assertEquals(vardec.toString() , vardec.toString());
+	}
+	
+	@Test
+	public void testMathEquality() {
+		MathExp math = new MathExp(new PlusOp(), new IntegerExp(0), new IntegerExp(0));
+		assertEquals(math, math);
+		assertEquals(math.toString(), math.toString());
+		assertEquals(new MathExp(new PlusOp(), new IntegerExp(0), new IntegerExp(0)), new MathExp(new PlusOp(), new IntegerExp(0), new IntegerExp(0)));
+	}
+	
+	@Test
+	public void testNewEquality() {
+		List<Exp> exps = new ArrayList<Exp>();
+		exps.add(new IntegerExp(6));
+		exps.add(new IntegerExp(7));
+		NewExp newe = new NewExp("classname", exps);
+		
+		assertEquals(newe, newe);
+		assertEquals(newe.toString(), newe.toString());
+		assertEquals(new NewExp("classname", exps), new NewExp("classname", exps));
+	}
+	
+	@Test
+	public void testClassdefEquality() {
+		List <VardeclareStmt> vardefs = new ArrayList<VardeclareStmt>();
+		vardefs.add(new VardeclareStmt(new IntType(),
+				new Variable("x")));
+		vardefs.add(new VardeclareStmt(new StringType(),
+				new Variable("y")));
+		
+		Classdef cdef = new Classdef("classname", vardefs);
+		
+		assertEquals(cdef, cdef);
+		assertEquals(cdef.toString(), cdef.toString());
+		assertEquals(new Classdef("classname", vardefs), new Classdef("classname", vardefs));
+	}
+	
+	@Test
+	public void testParseClassdef() throws ParseException {
+		final Token[] input = new Token[] {
+				new ObjToken(),
+				new VariableToken("classname"),
+				new LeftCurlyBracketToken(),
+				new RightCurlyBracketToken()
+				
+		};
+		final Parser parser = new Parser(input);
+		final String classname = "classname";
+		
+		List <VardeclareStmt> vardecs = new ArrayList<VardeclareStmt>();
+		vardecs.add(new VardeclareStmt(new IntType(),
+				new Variable("x")));
+		vardecs.add(new VardeclareStmt(new StringType(),
+				new Variable("y")));
+		
+		final Classdef classdef = new Classdef(classname, vardecs);
+		
+		assertEquals(new ParseResult<Classdef>(classdef, 1), parser.parseClassdef(0));
+		assertEquals(new ParseResult<Classdef>(classdef, 1).toString(), parser.parseClassdef(0).toString());
 	}
 	
 	//parseType
@@ -41,6 +112,8 @@ public class ParseTest {
 		final Parser parser = new Parser(input);
 		assertEquals(new ParseResult<Type>(new IntType(), 1).toString(),
 		parser.parseType(0).toString());
+		assertEquals(new ParseResult<Type>(new IntType(), 1),
+				parser.parseType(0));
 	}
 	
 	//parseVardec
@@ -52,8 +125,10 @@ public class ParseTest {
 				new VariableToken("x"),
 		};
 		final Parser parser = new Parser(input);
+		assertEquals(new ParseResult<VardeclareStmt>(new VardeclareStmt(new IntType(), new Variable("x")), 1),
+		parser.parseVardec(0));
 		assertEquals(new ParseResult<VardeclareStmt>(new VardeclareStmt(new IntType(), new Variable("x")), 1).toString(),
-		parser.parseVardec(0).toString());
+				parser.parseVardec(0).toString());
 	}
 	
 	//parseOp
@@ -84,14 +159,6 @@ public class ParseTest {
 						parser.parseOp(i).toString());
 			}
 		}
-	}
-	
-	//VardefStmt
-	@Test
-	public void testParseVardefStmt() throws ParseException {
-		final Token[] input = new Token[] {
-		};
-		final Parser parser = new Parser(input);
 	}
 	
 	//Exp
@@ -131,15 +198,24 @@ public class ParseTest {
 		}
 	}
 	
-	//NewExp
 	@Test
-	public void testParseNewExp() throws ParseException {
+	public void testParseExps() throws ParseException {
 		final Token[] input = new Token[] {
-				
+				new NumberToken(69),
+				new NumberToken(420),
+				new StringToken("YOLO")
 		};
+
 		final Parser parser = new Parser(input);
+		
+		final List<Exp> exps = new ArrayList<Exp>();
+		exps.add(new IntegerExp(69));
+		exps.add(new IntegerExp(420));
+		exps.add(new StringExp("YOLO"));
+		
+		assertEquals(new ParseResult<List<Exp>>(exps, 0).toString(), parser.parseExps(0).toString());
 	}
-	
+
 	//Program, Classdefs, Exps
 	@Test
 	public void testParseProgram() throws ParseException {
@@ -174,5 +250,84 @@ public class ParseTest {
 		};
 		final Parser parser = new Parser(input);
 		assertEquals(new ParseResult<Stmt>(new PrintStmt(parser.parseExp(1).result), parser.parseExp(1).nextPosition).toString(), parser.parseExp(0).toString());
+	}
+	
+	
+	//VardefStmt
+	/*@Test
+	public void testParseVardefStmt() throws ParseException {
+		final Token[] input = new Token[] {
+		};
+		final Parser parser = new Parser(input);
+	}*/
+	
+	//VardecStmt
+	@Test
+	public void testParseVardeclare() throws ParseException {
+		final Token[] input = new Token[] {
+				new StringToken(),
+				new VariableToken("x")
+		};
+		final Parser parser = new Parser(input);
+		
+		assertEquals(new ParseResult<VardeclareStmt>(new VardeclareStmt(new StringType(), new Variable("x")), 0), parser.parseType(0).toString());
+	}
+	
+	@Test
+	public void testParseVardeclares() throws ParseException {
+		final Token[] input = new Token[] {
+				new StringToken(),
+				new VariableToken("x"),
+				new IntToken(),
+				new VariableToken("69")
+		};
+		final Parser parser = new Parser(input);
+		
+		final List<VardeclareStmt> vardecs = new ArrayList<VardeclareStmt>();
+		vardecs.add(new VardeclareStmt(new StringType(), new Variable("x")));
+		vardecs.add(new VardeclareStmt(new IntType(), new Variable("69")));
+		
+		assertEquals(new ParseResult<List<VardeclareStmt>>(vardecs, 0).toString(), parser.parseVardeclares(0).toString());
+	}
+	
+	@Test
+	public void testClassdefExp() throws ParseException {
+		ClassdefExp classdefexp = new ClassdefExp("classname");
+		assertEquals(classdefexp, classdefexp);
+		assertEquals(classdefexp.toString(), classdefexp.toString());
+		assertEquals(new ClassdefExp("classname"), new ClassdefExp("classname"));
+	}
+	
+	@Test
+	public void testPrintExp() throws ParseException {
+		PrintExp pexp = new PrintExp();
+		assertEquals(pexp, pexp);
+		assertEquals(pexp.toString(), pexp.toString());
+		assertEquals(new PrintExp(), new PrintExp());
+	}
+	
+	@Test
+	public void testProgram() throws ParseException {
+		String classname = "classname";
+		List <Stmt> stmts = new ArrayList<Stmt>();
+		stmts.add((Stmt) new VardefStmt(new IntType(),
+				new Variable("x"), new IntegerExp(6)));
+		stmts.add((Stmt) new VardefStmt(new StringType(),
+				new Variable("y"), new IntegerExp(9)));
+		
+		List <VardeclareStmt> vardeclares = new ArrayList<VardeclareStmt>();
+		vardeclares.add(new VardeclareStmt(new IntType(),
+				new Variable("x")));
+		vardeclares.add(new VardeclareStmt(new StringType(),
+				new Variable("y")));
+		
+		final Classdef classdef = new Classdef(classname, vardeclares);
+		final List<Classdef> classdefs = new ArrayList<Classdef>();
+		classdefs.add(classdef);
+		
+		Program program = new Program(classdefs, stmts);
+		
+		assertEquals(program, program);
+		assertEquals(program.toString(), program.toString());
 	}
 }

@@ -2,6 +2,9 @@ package kwyjino.parser;
 
 import java.util.Objects;
 
+//TODO: ObjAccessExp excluded from tests. what is this for?
+
+/*
 public class ObjAccessExp implements Exp {
 	public final Exp exp;
 	public final String variable;
@@ -28,4 +31,4 @@ public class ObjAccessExp implements Exp {
 				+ getClass() + ", toString()=" + super.toString() + "]";
 	}
 	
-}
+}*/
