@@ -282,7 +282,7 @@ public class Parser {
     // type ::= `int` | `String`
     public ParseResult<Type> parseType(final int position) throws ParseException {
         final Token token = getToken(position);
-        if (token instanceof NumberToken) {
+        if (token instanceof IntToken) {
             return new ParseResult<Type>(new IntType(), position + 1);
         } else if (token instanceof StringToken) {
             return new ParseResult<Type>(new StringType(), position + 1);

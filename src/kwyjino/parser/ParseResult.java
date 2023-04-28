@@ -10,6 +10,7 @@ public class ParseResult<A> {
 	@Override
 	public String toString() {
 		return "ParseResult [result=" + result + ", nextPosition=" + nextPosition + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
+				+ /*", hashCode()=" + hashCode() + ", toString()=" + super.toString() +*/ "]";
 	}
+	//TODO: why is hashCode() and super.toString() causing issues here?
 }
