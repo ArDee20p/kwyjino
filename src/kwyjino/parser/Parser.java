@@ -214,6 +214,10 @@ public class Parser {
         	assertTokenIs(position, new RightParenToken());
         	return new ParseResult<Exp>(new ClassdefExp(classname), position + 1);
         }
+        
+        else if (token instanceof PrintToken) {
+        	return new ParseResult<Exp>(new PrintExp(), position+1);
+        }
         else {
             throw new ParseException("expected expression; received: " + token.toString());
         }

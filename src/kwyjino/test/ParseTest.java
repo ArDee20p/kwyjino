@@ -303,7 +303,7 @@ public class ParseTest {
 		PrintExp pexp = new PrintExp();
 		assertEquals(pexp, pexp);
 		assertEquals(pexp.toString(), pexp.toString());
-		assertEquals(new PrintExp(), new PrintExp());
+		assertEquals(new PrintExp().toString(), new PrintExp().toString());
 	}
 	
 	@Test
