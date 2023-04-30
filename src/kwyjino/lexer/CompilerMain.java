@@ -11,7 +11,7 @@ public class CompilerMain {
 	public String teststring="";
 	public String testtypes="";
 	
-		LinkedList<Token> list=new LinkedList<Token>();
+		public LinkedList<Token> list=new LinkedList<Token>();
 		public void printtok() {
 			for(int i=0; i<list.size();i++) {
 				//check if class is stringvar
