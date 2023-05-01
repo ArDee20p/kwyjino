@@ -16,4 +16,8 @@ public class EqualsToken implements Token {
 		return "EqualsToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
 				+ super.toString() + "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		return output;
+	}
 }

@@ -16,4 +16,9 @@ public class PlusToken implements Token {
 		return "PlusToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
 				+ "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		return output;
+	}
+    
 }

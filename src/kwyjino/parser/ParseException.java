@@ -2,6 +2,7 @@ package kwyjino.parser;
 
 import java.util.Arrays;
 
+@SuppressWarnings("serial")
 public class ParseException extends Exception {
 	    @Override
 	public String toString() {

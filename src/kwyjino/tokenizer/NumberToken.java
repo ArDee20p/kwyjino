@@ -23,4 +23,9 @@ public class NumberToken implements Token {
 		return "NumberToken [value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
 				+ ", toString()=" + super.toString() + "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		output=output+" "+value;
+		return output;
+	}
 }

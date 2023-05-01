@@ -16,4 +16,8 @@ public class ObjToken implements Token {
 		return "ObjToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
 				+ "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		return output;
+	}
 }

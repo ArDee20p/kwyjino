@@ -16,4 +16,9 @@ public class RightCurlyBracketToken implements Token {
 		return "RightCurlyBracketToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
 				+ super.toString() + "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+
+		return output;
+	}
 }

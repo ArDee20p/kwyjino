@@ -16,4 +16,8 @@ public class MultToken implements Token {
 		return "MultToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()=" + super.toString()
 				+ "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		return output;
+	}
 }

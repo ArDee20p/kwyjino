@@ -24,4 +24,9 @@ public class StringToken implements Token {
 		return "StringToken [Value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
 				+ ", toString()=" + super.toString() + "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		output=output+" "+value;
+		return output;
+	}
 }

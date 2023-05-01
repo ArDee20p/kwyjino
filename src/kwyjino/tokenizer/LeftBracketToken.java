@@ -16,4 +16,8 @@ public class LeftBracketToken implements Token {
 		return "LeftBracketToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
 				+ super.toString() + "]";
 	}
+    public String SimpletoString() {
+    	String output=this.getClass().getSimpleName();
+		return output;
+	}
 }

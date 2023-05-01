@@ -3,12 +3,15 @@ import kwyjino.tokenizer.*;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import kwyjino.lexer.CompilerMain;
-import kwyjino.parser.*;
 
 public class LexTest {
 
@@ -72,7 +75,6 @@ public class LexTest {
 		@Test
 		public void unknowntest() {
 				CompilerMain a = new CompilerMain("? code");
-			VariableToken testcode=new VariableToken("code");
 				try {
 					while(a.nextToken());
 				} catch (Exception e) {
@@ -137,9 +139,38 @@ public class LexTest {
 
 		}
 		@Test
+		public void fileread()throws Exception {
+			String data = "";
+		    try {
+				data = new String(Files.readAllBytes(Paths.get("code.txt")));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			CompilerMain a = new CompilerMain(data);
+				ClassnameToken classa = new ClassnameToken();
+				ObjToken objecta = new ObjToken();
+				LeftBracketToken LeftBrack = new LeftBracketToken();
+				RightBracketToken rbrack = new RightBracketToken();
+				StringVarToken Stri = new StringVarToken();
+				VarToken varto = new VarToken();
+				NewToken newt = new NewToken();
+				while(a.nextToken());
+
+				assertEquals(classa.toString(), a.list.get(0).toString());
+				assertEquals(objecta.toString(), a.list.get(1).toString());
+				assertEquals(LeftBrack.toString(), a.list.get(2).toString());
+				assertEquals(Stri.toString(), a.list.get(3).toString());
+				assertEquals(varto.toString(), a.list.get(4).toString());
+				assertEquals(newt.toString(), a.list.get(5).toString());
+				
+				
+				
+				assertEquals(rbrack.toString(), a.list.get(6).toString());
+			}
+		@Test
 		public void emptycode() throws Exception{
 			CompilerMain a = new CompilerMain("");
-				NumberToken testInt = new NumberToken(5);
 				while(a.nextToken());
 				
 			

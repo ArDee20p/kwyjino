@@ -2,7 +2,6 @@ package kwyjino.lexer;
 
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Scanner;
 
 import kwyjino.tokenizer.*;
 

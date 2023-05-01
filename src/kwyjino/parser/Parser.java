@@ -20,6 +20,7 @@ import kwyjino.tokenizer.*;
  * Should be added later for easier debugging.
  */
 
+@SuppressWarnings("unused")
 public class Parser {
     private final Token[] tokens;
     
