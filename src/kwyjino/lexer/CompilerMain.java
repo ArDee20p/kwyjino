@@ -2,6 +2,7 @@ package kwyjino.lexer;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 import kwyjino.tokenizer.*;
 
@@ -10,19 +11,24 @@ public class CompilerMain {
 	private int codeLength=code.length();
 	public String teststring="";
 	public String testtypes="";
+	public Boolean Unknown =false;
 	
 		public LinkedList<Token> list=new LinkedList<Token>();
+		/*
+		 * old debug code. kept in for reference
+		 *//*
 		public void printtok() {
 			for(int i=0; i<list.size();i++) {
 				//check if class is stringvar
 				/*System.out.print(list.get(i).getClass());
 				if(list.get(i) instanceof StringVarToken)
-					System.out.print("AM STRINGVAR!");*/
+					System.out.print("AM STRINGVAR!");
 				System.out.print(list.get(i).toString());
 				teststring=teststring+list.get(i).toString();
 				testtypes=testtypes+list.get(i).toString();
 			}
 		}
+		*/
 		public CompilerMain(String codeInput){
 			code=codeInput;
 			codeLength=code.length();
@@ -30,18 +36,18 @@ public class CompilerMain {
 	  private int currentIndex=0;
 	  private Token currentToken;
 	  private Token previousToken;
-	  private boolean UseWarnings=false;
+	  public boolean UseWarnings=false;
 	  ////////////////////////////////////////////////doesn't know what an & is. May or may not be relevant later
 	   /**
 	   * Updates currentToken to the next valid Token if it is available.
 	   *
 	   * @return true, if a valid token is available next.
+	 * @throws Exception 
 	   */
 	  
 	  
 	  
-	  
-	  public boolean nextToken() {
+	  public boolean nextToken() throws Exception{
 		  if (code!="")
 			if (code.charAt(0) == '!')
 		      { // enable warnings instead of errors
@@ -180,17 +186,23 @@ public class CompilerMain {
 	      
 	      
 	      else {
-	        System.out.print("Token unknown at "+currentChar);
+	    	  if (UseWarnings) {
+		        System.out.print("Token unknown at "+currentChar+ "Will still attempt to continue");
+				Unknown=true;
+				currentIndex++;
+	    	  }
+	    	  else {
+	    		  throw new Exception("\"Token unknown at "+currentChar);
+	    	  }
 	      }
 	      
 	      if(currentToken!=previousToken) {
-	      list.add(currentToken);
+	    		  list.add(currentToken);
 	      }
 	      return true;
 	    }
 	    return false;
 	  }
-
 	  /**
 	   * Read Integer as String
 	   *
