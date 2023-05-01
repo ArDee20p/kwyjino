@@ -186,13 +186,14 @@ public class CompilerMain {
 	      
 	      
 	      else {
+	    	  //mostly caused by punctuation in code. 
+	    	  //if ! is used, will not throw an exception
 	    	  if (UseWarnings) {
-		        System.out.print("Token unknown at "+currentChar+ "Will still attempt to continue");
+		        System.out.print("Token unknown at Index "+currentIndex+":"+currentChar+ ", Will still attempt to continue\n");
 				Unknown=true;
-				currentIndex++;
 	    	  }
 	    	  else {
-	    		  throw new Exception("\"Token unknown at "+currentChar);
+	    		  throw new Exception("Token unknown at Index "+currentIndex+":"+currentChar);
 	    	  }
 	      }
 	      

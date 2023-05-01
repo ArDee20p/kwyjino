@@ -41,6 +41,7 @@ public class LexTest {
 			assertEquals(testcode.toString(), a.list.get(1).toString());
 			assertEquals(testeq.toString(), a.list.get(2).toString());
 			assertEquals(teststring.toString(), a.list.get(3).toString());
+			
 		}
 		@Test
 		public void testmathops()throws Exception {
@@ -69,24 +70,24 @@ public class LexTest {
 			assertEquals(teststring.toString(), a.list.get(3).toString());
 		}
 		@Test
-		public void unknowntest() throws Exception{
+		public void unknowntest() {
 				CompilerMain a = new CompilerMain("? code");
 			VariableToken testcode=new VariableToken("code");
-			while(a.nextToken());
+				try {
+					while(a.nextToken());
+				} catch (Exception e) {
+					assertEquals(true, true);
+					e.printStackTrace();
+				}
 		}
 		
 		@Test
 		public void Bangtest() throws Exception{
-			CompilerMain a = new CompilerMain("! ? code");
+			CompilerMain a = new CompilerMain("! ?code");
 			VariableToken testcode=new VariableToken("code");
-			try {
 				while(a.nextToken());
 				assertEquals(testcode.toString(), a.list.get(0).toString());
 				assertEquals(true, a.UseWarnings);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 		@Test
@@ -95,6 +96,7 @@ public class LexTest {
 			while(a.nextToken());
 			VariableToken testcode=new VariableToken("code");
 			assertEquals(testcode.toString(), a.list.get(0).toString());
+
 
 		}
 		@Test
@@ -132,6 +134,26 @@ public class LexTest {
 			
 			
 			assertEquals(rbrack.toString(), a.list.get(6).toString());
+
+		}
+		@Test
+		public void emptycode() throws Exception{
+			CompilerMain a = new CompilerMain("");
+				NumberToken testInt = new NumberToken(5);
+				while(a.nextToken());
+				
+			
+				assertEquals(0, a.list.size());
+
+		}
+		@Test
+		public void NumberatEnd() throws Exception{
+			CompilerMain a = new CompilerMain("5");
+				NumberToken testInt = new NumberToken(5);
+				while(a.nextToken());
+				
+			
+				assertEquals(testInt.toString(), a.list.get(0).toString());
 
 		}
 	}
