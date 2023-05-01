@@ -20,3 +20,11 @@ program::=[`!`] classdef* stmt*
 
 ! Converts privacy errors into warnings.
 ```
+
+## How to Compile Compiler
+
+The compiler can be compiled by
+
+## How to Run Compiler
+
+The compiler can be run by
