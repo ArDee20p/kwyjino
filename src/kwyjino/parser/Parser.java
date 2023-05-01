@@ -7,7 +7,7 @@ import java.lang.String;
 import kwyjino.tokenizer.*;
 
 /* missing grammar coverage: 
- * exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
+ * exp ::= `[`exp variable`]`
  * 
  * STMT::= lhs `=` exp
  * 
@@ -16,7 +16,7 @@ import kwyjino.tokenizer.*;
  */
 
 /*
- * TODO: we're missing descriptive ParseExceptions for most of the methods.
+ * TODO: we're missing descriptive ParseExceptions for some of the methods.
  * Should be added later for easier debugging.
  */
 
