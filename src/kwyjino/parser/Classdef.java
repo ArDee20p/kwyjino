@@ -7,14 +7,14 @@ import java.util.Objects;
 
 public class Classdef {
 	public final String classname;
-	public final List<VardeclareStmt> vardefs;
-	public Classdef(String classname, List<VardeclareStmt> vardefs) {
+	public final List<Vardeclare> vardecs;
+	public Classdef(String classname, List<Vardeclare> vardecs) {
 		this.classname = classname;
-		this.vardefs = vardefs;
+		this.vardecs = vardecs;
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(classname, vardefs);
+		return Objects.hash(classname, vardecs);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -23,10 +23,10 @@ public class Classdef {
 		if (!(obj instanceof Classdef))
 			return false;
 		Classdef other = (Classdef) obj;
-		return Objects.equals(classname, other.classname) && Objects.equals(vardefs, other.vardefs);
+		return Objects.equals(classname, other.classname) && Objects.equals(vardecs, other.vardecs);
 	}
 	@Override
 	public String toString() {
-		return "Classdef [classname=" + classname + ", vardefs=" + vardefs + "]";
+		return "Classdef [classname=" + classname + ", vardefs=" + vardecs + "]";
 	}
 }

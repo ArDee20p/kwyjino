@@ -6,7 +6,7 @@ import java.util.List;
 import java.lang.String;
 import kwyjino.tokenizer.*;
 
-/* missing grammar coverage: 
+/* TODO: missing grammar coverage: 
  * exp ::= `[`exp variable`]`
  * 
  * STMT::= lhs `=` exp
@@ -57,11 +57,8 @@ public class Parser {
         }
     } // parseProgram
     
-    // program::=[`!`] classdef* stmt*
+    // program::= classdef* stmt*
     public ParseResult<Program> parseProgn(int position) throws ParseException {
-    	assertTokenIs(position, new LeftBracketToken());
-    	assertTokenIs(position+1, new VariableToken("!"));
-    	assertTokenIs(position+2, new RightBracketToken());
         final ParseResult<List<Classdef>> classdefs = parseClassdefs(position+3);
         position = classdefs.nextPosition;
         final ParseResult<List<Stmt>> stmts = parseStmts(position);
@@ -95,9 +92,6 @@ public class Parser {
         return new ParseResult<List<Stmt>>(stmts, position);
 	}
 
-    /*TODO: Classdef as it sits would theoretically work, but the below
-     * code is reliant on VardecStatement, which isn't verified to work.
-     */
     // classdef*
 	public ParseResult<List<Classdef>> parseClassdefs(int position) {
 		final List<Classdef> classdefs = new ArrayList<Classdef>();
@@ -117,52 +111,42 @@ public class Parser {
 	//classdef::=`obj` classname`{`(type variable)*`}`
 	public ParseResult<Classdef> parseClassdef(int position) throws ParseException {
 		
-		final String classname;
 		assertTokenIs(position, new ObjToken());
-		final Token token = getToken(position+1);
-		if (token instanceof VariableToken) {
-			classname = ((VariableToken)token).value;
-		}
-		else {
-			throw new ParseException("Unexpected token at position: " + (position+1));
-		}
-		assertTokenIs(position + 2, new LeftCurlyBracketToken());
+		ParseResult<Variable> classname = parseVariable(position+1);
+		
+		assertTokenIs(classname.nextPosition, new LeftCurlyBracketToken());
 
-        final ParseResult<List<VardeclareStmt>> vardeclares = parseVardeclares(position + 3);
+        final ParseResult<List<Vardeclare>> vardeclares = parseVardeclares(classname.nextPosition+1);
         
-        position = vardeclares.nextPosition;
-        
-        assertTokenIs(position, new RightCurlyBracketToken());
+        assertTokenIs(vardeclares.nextPosition, new RightCurlyBracketToken());
                 
-        final Classdef classdef = new Classdef(classname, vardeclares.result);
-        return new ParseResult<Classdef>(classdef, position+1);
+        final Classdef classdef = new Classdef(classname.result.name, vardeclares.result);
+        return new ParseResult<Classdef>(classdef, vardeclares.nextPosition+1);
 	}
 	
-	//TODO: VardeclareStmt is unfinished, affecting Classdef and Program.
-	//type variable
-	public ParseResult<VardeclareStmt> parseVardeclare(int position) throws ParseException  {
+	//vardec ::= type variable
+	public ParseResult<Vardeclare> parseVardeclare(int position) throws ParseException  {
+		final ParseResult<Type> type = parseType(position);
+		final ParseResult<Variable> variable = parseVariable(type.nextPosition);
 		
-		final Type type = parseType(position).result;
-		final Variable variable = parseVariable(position+1).result;
-		
-		final VardeclareStmt vardeclare = new VardeclareStmt(type, variable);
-		return new ParseResult<VardeclareStmt>(vardeclare, position+1);
+		final Vardeclare vardeclare = new Vardeclare(type.result, variable.result);
+		return new ParseResult<Vardeclare>(vardeclare, variable.nextPosition);
 	}
 	
-	//(type variable)*
-	public ParseResult<List<VardeclareStmt>> parseVardeclares(int position) {
-		final List<VardeclareStmt> vardeclares = new ArrayList<VardeclareStmt>();
+	//(vardec)*
+	public ParseResult<List<Vardeclare>> parseVardeclares(int position) {
+		final List<Vardeclare> vardeclares = new ArrayList<Vardeclare>();
         boolean shouldRun = true;
         while (shouldRun) {
             try {
-                final ParseResult<VardeclareStmt> vardeclare = parseVardeclare(position);
+                final ParseResult<Vardeclare> vardeclare = parseVardeclare(position);
                 vardeclares.add(vardeclare.result);
                 position = vardeclare.nextPosition;
             } catch (final ParseException e) {
                 shouldRun = false;
             }
         }
-        return new ParseResult<List<VardeclareStmt>>(vardeclares, position);
+        return new ParseResult<List<Vardeclare>>(vardeclares, position);
 	}
 
     // exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
@@ -204,21 +188,11 @@ public class Parser {
                                         position + 1);
         }
         
-        //TODO: NewToken branch of parseExp might need a second look.
+        //TODO: this needs to be NewExp
         //`new` classname `(` exp* `)`
-        else if (token instanceof NewToken) {
-        	assertTokenIs(position+1, new ClassnameToken());
-        	String classname = getToken(position+1).toString();
-        	assertTokenIs(position+2, new LeftParenToken());
-        	final ParseResult<List<Exp>> exps = parseExps(position+3);
-        	position = exps.nextPosition;
-        	assertTokenIs(position, new RightParenToken());
-        	return new ParseResult<Exp>(new ClassdefExp(classname), position + 1);
-        }
+        /*else if (token instanceof NewToken) {
+        }*/
         
-        else if (token instanceof PrintToken) {
-        	return new ParseResult<Exp>(new PrintExp(), position+1);
-        }
         else {
             throw new ParseException("expected expression; received: " + token.toString());
         }
@@ -268,21 +242,19 @@ public class Parser {
     }
     
     // STMT::= type variable `=` exp
-    public ParseResult<Stmt> parseVardec(final int position) throws ParseException {
-        final ParseResult<Type> type = parseType(position);
-        final ParseResult<Variable> variable = parseVariable(position + 1);
-        assertTokenIs(position + 2, new EqualsToken());
-        final ParseResult<Exp> exp = parseExp(variable.nextPosition);
-        return new ParseResult<Stmt>(new VardefStmt(type.result, variable.result,
-                                                    exp.result),
-                                     exp.nextPosition + 1);
+    public ParseResult<Stmt> parseVardecStmt(final int position) throws ParseException {
+        final ParseResult<Vardeclare> vardec = parseVardeclare(position);
+        assertTokenIs(vardec.nextPosition, new EqualsToken());
+        final ParseResult<Exp> exp = parseExp(vardec.nextPosition+1);
+        return new ParseResult<Stmt>(new VardeclareStmt(vardec.result, exp.result),
+                                     exp.nextPosition);
     } // parseAssign
 
     // TODO: "lhs `=` exp" portion of parseStmt.
     // STMT::= `Print` exp| type variable `=` exp| lhs `=` exp
     public ParseResult<Stmt> parseStmt(final int position) throws ParseException {
         try {
-            return parseVardec(position);
+            return parseVardecStmt(position);
         } catch (final ParseException e1) {
         		return parsePrint(position);
         }

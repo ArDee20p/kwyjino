@@ -6,8 +6,7 @@ public class PrintStmt implements Stmt {
 
 	@Override
 	public String toString() {
-		return "PrintStmt [exp=" + exp + ", hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
-				+ super.toString() + "]";
+		return "PrintStmt [exp=" + exp + "]";
 	}
 
 	public final Exp exp;

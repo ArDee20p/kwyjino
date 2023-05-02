@@ -2,26 +2,20 @@ package kwyjino.parser;
 
 import java.util.Objects;
 
-public class VardeclareStmt {
-	public final Type type;
-	public final Variable variable;
-	public VardeclareStmt(Type type, Variable variable) {
-		this.type = type;
-		this.variable = variable;
-	}
+public class VardeclareStmt implements Stmt {
+	public final Vardeclare vardec;
+	public final Exp exp;
 	
-	public VardeclareStmt() {
-		this.type = new StringType();
-		this.variable = new Variable("");
+	public VardeclareStmt(Vardeclare vardec, Exp exp) {
+		this.vardec = vardec;
+		this.exp = exp;
 	}
-	@Override
-	public String toString() {
-		return "VardeclareStmt [type=" + type + ", variable=" + variable + "]";
-	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(type, variable);
+		return Objects.hash(exp, vardec);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -29,6 +23,12 @@ public class VardeclareStmt {
 		if (!(obj instanceof VardeclareStmt))
 			return false;
 		VardeclareStmt other = (VardeclareStmt) obj;
-		return Objects.equals(type, other.type) && Objects.equals(variable, other.variable);
+		return Objects.equals(exp, other.exp) && Objects.equals(vardec, other.vardec);
 	}
+
+	@Override
+	public String toString() {
+		return "VardeclareStmt [vardec=" + vardec + ", exp=" + exp + "]";
+	}
+	
 }

@@ -22,7 +22,6 @@ public class StringType implements Type {
 
 	@Override
 	public String toString() {
-		return "StringType [name=" + name + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
-				+ ", toString()=" + super.toString() + "]";
+		return "StringType [name=" + name + "]";
 	}
 }
