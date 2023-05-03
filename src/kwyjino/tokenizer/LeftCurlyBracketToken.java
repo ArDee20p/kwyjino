@@ -3,7 +3,7 @@ package kwyjino.tokenizer;
 public class LeftCurlyBracketToken implements Token {
     @Override
     public boolean equals(final Object other) {
-        return other instanceof RightBracketToken;
+        return other instanceof LeftCurlyBracketToken;
     }
 
     @Override
@@ -13,8 +13,7 @@ public class LeftCurlyBracketToken implements Token {
 
     @Override
 	public String toString() {
-		return "LeftCurlyBracketToken [hashCode()=" + hashCode() + ", getClass()=" + getClass() + ", toString()="
-				+ super.toString() + "]";
+		return "LeftCurlyBracketToken";
 	}
     public String SimpletoString() {
     	String output=this.getClass().getSimpleName();

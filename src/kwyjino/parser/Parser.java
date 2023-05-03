@@ -59,10 +59,12 @@ public class Parser {
     
     // program::= classdef* stmt*
     public ParseResult<Program> parseProgn(int position) throws ParseException {
-        final ParseResult<List<Classdef>> classdefs = parseClassdefs(position+3);
+        final ParseResult<List<Classdef>> classdefs = parseClassdefs(position);
         position = classdefs.nextPosition;
         final ParseResult<List<Stmt>> stmts = parseStmts(position);
-        return new ParseResult<Program>(new Program(classdefs.result, stmts.result), stmts.nextPosition);
+        Program program = new Program(classdefs.result, stmts.result);
+        System.out.print(program.toString());
+        return new ParseResult<Program>(program, stmts.nextPosition);
     } // parseProgram
     
     // variable is variable
@@ -113,13 +115,13 @@ public class Parser {
 		
 		assertTokenIs(position, new ObjToken());
 		ParseResult<Variable> classname = parseVariable(position+1);
-		
+				
 		assertTokenIs(classname.nextPosition, new LeftCurlyBracketToken());
-
+		
         final ParseResult<List<Vardeclare>> vardeclares = parseVardeclares(classname.nextPosition+1);
         
         assertTokenIs(vardeclares.nextPosition, new RightCurlyBracketToken());
-                
+        
         final Classdef classdef = new Classdef(classname.result.name, vardeclares.result);
         return new ParseResult<Classdef>(classdef, vardeclares.nextPosition+1);
 	}

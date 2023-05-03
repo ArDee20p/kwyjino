@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import kwyjino.tokenizer.*;
 
+//TODO: refactor to "Tokenizer.java" in kwyjino.tokenizer.
+
 public class CompilerMain {
 	public String code="";
 	private int codeLength=code.length();
@@ -13,21 +15,7 @@ public class CompilerMain {
 	public Boolean Unknown =false;
 	
 		public LinkedList<Token> list=new LinkedList<Token>();
-		/*
-		 * old debug code. kept in for reference
-		 *//*
-		public void printtok() {
-			for(int i=0; i<list.size();i++) {
-				//check if class is stringvar
-				/*System.out.print(list.get(i).getClass());
-				if(list.get(i) instanceof StringVarToken)
-					System.out.print("AM STRINGVAR!");
-				System.out.print(list.get(i).toString());
-				teststring=teststring+list.get(i).toString();
-				testtypes=testtypes+list.get(i).toString();
-			}
-		}
-		*/
+		
 		public CompilerMain(String codeInput){
 			code=codeInput;
 			codeLength=code.length();
@@ -46,7 +34,7 @@ public class CompilerMain {
 	  
 	  
 	  
-	  public boolean nextToken() throws Exception{
+	  public boolean nextToken() throws TokenizerException{
 		  if (code!="")
 			if (code.charAt(0) == '!')
 		      { // enable warnings instead of errors
@@ -192,7 +180,7 @@ public class CompilerMain {
 				Unknown=true;
 	    	  }
 	    	  else {
-	    		  throw new Exception("Token unknown at Index "+currentIndex+":"+currentChar);
+	    		  throw new TokenizerException("Token unknown at Index "+currentIndex+":"+currentChar);
 	    	  }
 	      }
 	      

@@ -84,6 +84,31 @@ public class ParseTest {
 
 	}
 	
+	@Test
+	public void testProgramEquality() throws ParseException {
+		String classname = "classname";
+		List <Stmt> stmts = new ArrayList<Stmt>();
+		stmts.add((Stmt) new VardefStmt(new IntType(),
+				new Variable("x"), new IntegerExp(6)));
+		stmts.add((Stmt) new VardefStmt(new StringType(),
+				new Variable("y"), new IntegerExp(9)));
+		
+		List <Vardeclare> vardeclares = new ArrayList<Vardeclare>();
+		vardeclares.add(new Vardeclare(new IntType(),
+				new Variable("x")));
+		vardeclares.add(new Vardeclare(new StringType(),
+				new Variable("y")));
+		
+		final Classdef classdef = new Classdef(classname, vardeclares);
+		final List<Classdef> classdefs = new ArrayList<Classdef>();
+		classdefs.add(classdef);
+		
+		Program program = new Program(classdefs, stmts);
+		
+		assertEquals(program, program);
+		assertEquals(program.toString(), program.toString());
+	}
+	
 	//parseType
 	@Test
 	public void testParseInt() throws ParseException {
@@ -144,8 +169,6 @@ public class ParseTest {
 		}
 	}
 	
-	
-	
 	//MathExp
 	@Test
 	public void testParseMathExp() throws ParseException {
@@ -198,16 +221,61 @@ public class ParseTest {
 		assertEquals(new ParseResult<List<Exp>>(exps, 3).toString(), parser.parseExps(0).toString());
 	}
 
+	@Test
+	public void testParseClassdef() throws ParseException {
+		List <Vardeclare> vardecs = new ArrayList<Vardeclare>();
+		vardecs.add(new Vardeclare(new IntType(),
+				new Variable("x")));
+		
+		Classdef cdef = new Classdef("classname", vardecs);
+		
+		final Token[] input = new Token[] {
+				new ObjToken(),
+				new VariableToken("classname"),
+				new LeftCurlyBracketToken(),
+				new IntToken(),
+				new VariableToken("x"),
+				new RightCurlyBracketToken()
+		};
+		final Parser parser = new Parser(input);
+		
+		assertEquals(new ParseResult<Classdef>(cdef, 6), parser.parseClassdef(0));
+		
+	}
+	
 	//Program, Classdefs, Exps
 	@Test
 	public void testParseProgram() throws ParseException {
+		String classname = "classname";
+		
+		List <Vardeclare> vardeclares = new ArrayList<Vardeclare>();
+		vardeclares.add(new Vardeclare(new IntType(),
+				new Variable("x")));
+		
+		List <Stmt> stmts = new ArrayList<Stmt>();
+		stmts.add((Stmt) new VardeclareStmt(new Vardeclare(new IntType(),
+				new Variable("y")), new IntegerExp(69)));
+		
+		final Classdef classdef = new Classdef(classname, vardeclares);
+		final List<Classdef> classdefs = new ArrayList<Classdef>();
+		classdefs.add(classdef);
+		
+		Program program = new Program(classdefs, stmts);
+		
 		final Token[] input = new Token[] {
-				//Classdefs
-				//Exps
-				new NumberToken(69),
-				new StringToken("hello!")
+				new ObjToken(),
+				new VariableToken("classname"),
+				new LeftCurlyBracketToken(),
+				new IntToken(),
+				new VariableToken("x"),
+				new RightCurlyBracketToken(),
+				new IntToken(),
+				new VariableToken("y"),
+				new EqualsToken(),
+				new NumberToken(69)
 		};
-		Parser.parseProgram(input);
+		
+		assertEquals(program, Parser.parseProgram(input));
 	}
 	
 	//PrintStmt
@@ -225,15 +293,7 @@ public class ParseTest {
 				new ParseResult<Stmt>(stmt, 2),
 				parser.parsePrint(0));
 	}
-	
-	
-	//VardefStmt
-	/*@Test
-	public void testParseVardefStmt() throws ParseException {
-		final Token[] input = new Token[] {
-		};
-		final Parser parser = new Parser(input);
-	}*/
+
 	
 	//VardecStmt
 	@Test
@@ -272,30 +332,7 @@ public class ParseTest {
 		assertEquals(new ParseResult<List<Vardeclare>>(vardecs, 4).toString(), parser.parseVardeclares(0).toString());
 	}
 
-	@Test
-	public void testProgram() throws ParseException {
-		String classname = "classname";
-		List <Stmt> stmts = new ArrayList<Stmt>();
-		stmts.add((Stmt) new VardefStmt(new IntType(),
-				new Variable("x"), new IntegerExp(6)));
-		stmts.add((Stmt) new VardefStmt(new StringType(),
-				new Variable("y"), new IntegerExp(9)));
-		
-		List <Vardeclare> vardeclares = new ArrayList<Vardeclare>();
-		vardeclares.add(new Vardeclare(new IntType(),
-				new Variable("x")));
-		vardeclares.add(new Vardeclare(new StringType(),
-				new Variable("y")));
-		
-		final Classdef classdef = new Classdef(classname, vardeclares);
-		final List<Classdef> classdefs = new ArrayList<Classdef>();
-		classdefs.add(classdef);
-		
-		Program program = new Program(classdefs, stmts);
-		
-		assertEquals(program, program);
-		assertEquals(program.toString(), program.toString());
-	}
+	
 	@Test
 	public void testRead() {
 		CompilerMain a = new CompilerMain("code");

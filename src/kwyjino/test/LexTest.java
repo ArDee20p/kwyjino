@@ -16,16 +16,16 @@ import kwyjino.lexer.CompilerMain;
 public class LexTest {
 
 	@BeforeEach
-	void setUp() throws Exception {
+	void setUp() throws TokenizerException {
 	}
 
 	@AfterEach
-	void tearDown() throws Exception {
+	void tearDown() throws TokenizerException {
 	}
 
 	//Start of lexer tests.
 		@Test
-		public void testvariable() throws Exception{
+		public void testvariable() throws TokenizerException {
 			CompilerMain a = new CompilerMain("code");
 			VariableToken testcode=new VariableToken("code");
 			while(a.nextToken());
@@ -33,7 +33,7 @@ public class LexTest {
 		}
 		
 		@Test
-		public void testdeclarestr() throws Exception {
+		public void testdeclarestr() throws TokenizerException {
 			CompilerMain a = new CompilerMain("int code = \"hi\"");
 			IntToken TestInt = new IntToken();
 			while(a.nextToken());
@@ -47,7 +47,7 @@ public class LexTest {
 			
 		}
 		@Test
-		public void testmathops()throws Exception {
+		public void testmathops()throws TokenizerException {
 			CompilerMain a = new CompilerMain("/ - * +");
 			while(a.nextToken());
 			DivToken TestInt = new DivToken();
@@ -60,7 +60,7 @@ public class LexTest {
 			assertEquals(teststring.toString(), a.list.get(3).toString());
 		}
 		@Test
-		public void brackettest() throws Exception{
+		public void brackettest() throws TokenizerException{
 			CompilerMain a = new CompilerMain("( ) { }");
 			while(a.nextToken());
 			LeftParenToken TestInt = new LeftParenToken();
@@ -72,19 +72,16 @@ public class LexTest {
 			assertEquals(testeq.toString(), a.list.get(2).toString());
 			assertEquals(teststring.toString(), a.list.get(3).toString());
 		}
-		@Test
-		public void unknowntest() {
-				CompilerMain a = new CompilerMain("? code");
-				try {
-					while(a.nextToken());
-				} catch (Exception e) {
-					assertEquals(true, true);
-					e.printStackTrace();
-				}
+		
+		//TODO: this stack overflows lol
+		@Test(expected= TokenizerException.class)
+		public void unknowntest() throws TokenizerException {
+			CompilerMain a = new CompilerMain("? code");
+			while(a.nextToken());
 		}
 		
 		@Test
-		public void Bangtest() throws Exception{
+		public void Bangtest() throws TokenizerException{
 			CompilerMain a = new CompilerMain("! ?code");
 			VariableToken testcode=new VariableToken("code");
 				while(a.nextToken());
@@ -93,7 +90,7 @@ public class LexTest {
 		}
 		
 		@Test
-		public void commtest() throws Exception{
+		public void commtest() throws TokenizerException{
 			CompilerMain a = new CompilerMain(" ` thisisacomment. It should not have a value in the code ` code");
 			while(a.nextToken());
 			VariableToken testcode=new VariableToken("code");
@@ -102,7 +99,7 @@ public class LexTest {
 
 		}
 		@Test
-		public void stringtest() throws Exception{
+		public void stringtest() throws TokenizerException{
 			CompilerMain a = new CompilerMain("print 5");
 				PrintToken testpr = new PrintToken();
 				NumberToken testInt = new NumberToken(5);
@@ -114,7 +111,7 @@ public class LexTest {
 
 		}
 		@Test
-		public void testnewobj()throws Exception {
+		public void testnewobj()throws TokenizerException {
 			CompilerMain a = new CompilerMain("classname obj [ string var new ]");
 				ClassnameToken classa = new ClassnameToken();
 				ObjToken objecta = new ObjToken();
@@ -139,7 +136,7 @@ public class LexTest {
 
 		}
 		@Test
-		public void fileread()throws Exception {
+		public void fileread()throws TokenizerException {
 			String data = "";
 		    try {
 				data = new String(Files.readAllBytes(Paths.get("code.txt")));
@@ -169,7 +166,7 @@ public class LexTest {
 				assertEquals(rbrack.toString(), a.list.get(6).toString());
 			}
 		@Test
-		public void emptycode() throws Exception{
+		public void emptycode() throws TokenizerException{
 			CompilerMain a = new CompilerMain("");
 				while(a.nextToken());
 				
@@ -178,7 +175,7 @@ public class LexTest {
 
 		}
 		@Test
-		public void NumberatEnd() throws Exception{
+		public void NumberatEnd() throws TokenizerException{
 			CompilerMain a = new CompilerMain("5");
 				NumberToken testInt = new NumberToken(5);
 				while(a.nextToken());
