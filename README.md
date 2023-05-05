@@ -3,20 +3,7 @@ Group compiler project for COMP 430 - CSUN Spring 2023.
 
 Grammar:
 ```
-variable is variable
-Classname is an obj
-String is a string ('a'..'z'|'A'..'Z')+ ;
-INT is an int: '0'..'9'+ ;
-type::=`string`|`int`| classname|`var`	Types are inferred with ‘VAR’; can be STRING or INT
-op::=` + `| `- `| `/ `| `*`
-exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
-
-STMT::= `Print` exp| type variable `=` exp| lhs `=` exp
-classdef::=`obj` classname`{`(type variable)*`}`
-lhs ::= variable | `[` lhs variable `]`
-program::=[`!`] classdef* stmt*
-
-! Converts privacy errors into warnings.
+copy properly this time
 ```
 
 ## How to Compile Compiler
