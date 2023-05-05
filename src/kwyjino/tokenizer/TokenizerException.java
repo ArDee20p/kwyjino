@@ -15,8 +15,4 @@ public class TokenizerException extends Exception {
 	public TokenizerException(final String message) {
         super(message);
     }
-    public String SimpletoString() {
-    	String output=this.getClass().getSimpleName();
-		return output;
-	}
 }

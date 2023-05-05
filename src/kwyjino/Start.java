@@ -28,8 +28,5 @@ public class Start {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for(int i=0; i<a.list.size();i++) {
-				 System.out.print(a.list.get(i).SimpletoString()+"\n");
-			 }
-		}
 	}
+}

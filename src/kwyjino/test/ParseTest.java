@@ -331,12 +331,31 @@ public class ParseTest {
 		
 		assertEquals(new ParseResult<List<Vardeclare>>(vardecs, 4).toString(), parser.parseVardeclares(0).toString());
 	}
-
 	
 	@Test
-	public void testRead() {
-		CompilerMain a = new CompilerMain("code");
-		assertEquals("code", a.code);
+	public void newexpParsed() {
+		final Token[] input = new Token[] {
+				new NewToken(),
+				new VariableToken("Classname"),
+				new LeftParenToken(),
+				new NumberToken(5),
+				new StringToken("69"),
+				new StringToken("69"),
+				new RightParenToken(),
+				
+		};
+		List<Exp> exps = new ArrayList<Exp>();
+		exps.add(new IntegerExp(6));
+		exps.add(new IntegerExp(7));
+		NewExp newe = new NewExp("classname", exps);
+		System.out.print("/n");
+		final Parser parser = new Parser(input);
+		System.out.print(parser.parseExps(0).toString());
+		
+		assertEquals("a", "B");
+	
 	}
+
+	
 
 }

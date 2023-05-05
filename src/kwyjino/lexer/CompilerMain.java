@@ -212,7 +212,7 @@ public class CompilerMain {
 	  private String readVariable() {
 		    StringBuilder sb = new StringBuilder();
 		    char currentChar = code.charAt(currentIndex);
-		    while (currentIndex<=codeLength && Character.isLetter(currentChar)) {
+		    while (currentIndex<=codeLength && (Character.isLetter(currentChar)||(code.charAt(currentIndex))=='.')) {
 		      sb.append(currentChar);
 		      currentIndex++;
 		      if (currentIndex>=codeLength) break;

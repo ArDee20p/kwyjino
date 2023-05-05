@@ -9,8 +9,7 @@ public class VariableToken implements Token {
 
     @Override
     public boolean equals(final Object other) {
-        return (other instanceof VariableToken&&
-                value == ((VariableToken)other).value);
+        return (other instanceof VariableToken);
     }
 
     @Override
@@ -20,12 +19,13 @@ public class VariableToken implements Token {
 
     @Override
 	public String toString() {
-		return "VariableToken [value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass()
-				+ ", toString()=" + super.toString() + "]";
+		return "VariableToken [value=" + value + ", hashCode()=" + hashCode() + ", getClass()=" + getClass();
 	}
-    public String SimpletoString() {
-    	String output=this.getClass().getSimpleName();
-		output=output+" "+value;
-		return output;
-	}
+    
+    
+    
+    
+    
+    
+    
 }
