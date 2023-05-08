@@ -20,5 +20,6 @@ program::=[`!`] classdef* stmt*
 ## How to Compile Compiler:
  Open the project in eclipse and select to build the project. Make sure the desired starter class is selected. Options are start, lextest, or parsetest
  
-## How to Run Compiler: Open the project in eclipse, place code folder with desired code in the directory eclipse checks for same folder, select run. Test files may also be used instead. Make sure the desired starter class is selected. Options are start, lextest, or parsetest
+## How to Run Compiler:
+Open the project in eclipse, place code folder with desired code in the directory eclipse checks for same folder, select run. Test files may also be used instead. Make sure the desired starter class is selected. Options are start, lextest, or parsetest
 ## How to Compile Compiler
