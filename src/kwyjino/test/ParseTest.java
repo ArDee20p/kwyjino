@@ -333,29 +333,48 @@ public class ParseTest {
 	}
 	
 	@Test
-	public void newexpParsed() {
+	public void parseNewExp() throws ParseException {
 		final Token[] input = new Token[] {
 				new NewToken(),
-				new VariableToken("Classname"),
+				new VariableToken("classname"),
 				new LeftParenToken(),
-				new NumberToken(5),
+				new NumberToken(6),
 				new StringToken("69"),
-				new StringToken("69"),
+				new StringToken("420"),
 				new RightParenToken(),
 				
 		};
 		List<Exp> exps = new ArrayList<Exp>();
 		exps.add(new IntegerExp(6));
-		exps.add(new IntegerExp(7));
-		NewExp newe = new NewExp("classname", exps);
-		System.out.print("/n");
+		exps.add(new StringExp("69"));
+		exps.add(new StringExp("420"));
+		NewExp newexp = new NewExp("classname", exps);
+
 		final Parser parser = new Parser(input);
-		System.out.print(parser.parseExps(0).toString());
 		
-		assertEquals("a", "B");
+		assertEquals(new ParseResult<NewExp>(newexp, 7), parser.parseExp(0));
 	
 	}
-
 	
+	//TODO: 
+
+	@Test
+	public void testParseClassVarExp() throws ParseException {
+		final Token[] input = new Token[] {
+				new LeftBracketToken(),
+				new VariableToken("ecks dee"),
+				new VariableToken("lmao"),
+				new RightBracketToken()
+		};
+		
+		final Parser parser = new Parser(input);
+		
+		Variable var1 = parser.parseVariable(1).result;
+		Variable var2 = parser.parseVariable(2).result;
+		
+		ClassVarExp cvexp = new ClassVarExp(var1, var2);
+		
+		assertEquals(new ParseResult<ClassVarExp>(cvexp, 4), parser.parseExp(0));
+	}
 
 }

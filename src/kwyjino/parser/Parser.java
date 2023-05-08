@@ -7,10 +7,7 @@ import java.lang.String;
 import kwyjino.tokenizer.*;
 
 
-/*
- * TODO: we're missing descriptive ParseExceptions for some of the methods.
- * Should be added later for easier debugging.
- */
+//TODO: Class variables [exp foo]
 
 @SuppressWarnings("unused")
 public class Parser {
@@ -20,6 +17,7 @@ public class Parser {
         this.tokens = tokens;
     } // Parser
 
+    //getter
     public Token getToken(final int position) throws ParseException {
         if (position >= 0 && position < tokens.length) {
             return tokens[position];
@@ -28,6 +26,7 @@ public class Parser {
         }
     } // getToken
 
+    //assertion function for ParseException
     public void assertTokenIs(final int position,
                               final Token expected) throws ParseException {
         final Token received = getToken(position);
@@ -84,7 +83,7 @@ public class Parser {
             }
         }
         return new ParseResult<List<Stmt>>(stmts, position);
-	}
+	} // parseStmts
 
     // classdef*
 	public ParseResult<List<Classdef>> parseClassdefs(int position) {
@@ -116,7 +115,7 @@ public class Parser {
         
         final Classdef classdef = new Classdef(classname.result.name, vardeclares.result);
         return new ParseResult<Classdef>(classdef, vardeclares.nextPosition+1);
-	}
+	} //parseClassdef
 	
 	//vardec ::= type variable
 	public ParseResult<Vardeclare> parseVardeclare(int position) throws ParseException  {
@@ -125,7 +124,7 @@ public class Parser {
 		
 		final Vardeclare vardeclare = new Vardeclare(type.result, variable.result);
 		return new ParseResult<Vardeclare>(vardeclare, variable.nextPosition);
-	}
+	} //parseVardeclare
 	
 	//(vardec)*
 	public ParseResult<List<Vardeclare>> parseVardeclares(int position) {
@@ -141,7 +140,7 @@ public class Parser {
             }
         }
         return new ParseResult<List<Vardeclare>>(vardeclares, position);
-	}
+	} //parseVardeclares
 
     // exp ::= INT | String | `(` op exp exp `)`|`[`exp variable`]`|`new` classname `(` exp* `)`
 
@@ -158,7 +157,6 @@ public class Parser {
                                         position + 1);
         } 
         
-        
         //::= `(` op exp exp `)`
         else if (token instanceof LeftParenToken) {
             final ParseResult<Op> op = parseOp(position + 1);
@@ -170,6 +168,14 @@ public class Parser {
                                                               left.result,
                                                               right.result),
                                         position + 1);
+        }
+        
+        //`[`exp variable`]`
+        else if (token instanceof LeftBracketToken) {
+        	ParseResult<Variable> var1 = parseVariable(position+1);
+        	ParseResult<Variable> var2 = parseVariable(var1.nextPosition);
+        	assertTokenIs(var2.nextPosition, new RightBracketToken());
+        	return new ParseResult<Exp>(new ClassVarExp(var1.result, var2.result), var2.nextPosition+1);
         }
         
         //`new` classname `(` exp* `)`
@@ -205,7 +211,7 @@ public class Parser {
         }
     	
     	return new ParseResult<List<Exp>>(exps, position);
-    }
+    } //parseExps
                                         
     // op::=` + `| `- `| `/ `| `*`
     public ParseResult<Op> parseOp(final int position) throws ParseException {
@@ -232,7 +238,7 @@ public class Parser {
         assertTokenIs(position, new PrintToken());
         final ParseResult<Exp> exp = parseExp(position + 1);
         return new ParseResult<Stmt>(new PrintStmt(exp.result), exp.nextPosition);
-    }
+    } //parsePrint
     
     // STMT::= type variable `=` exp
     public ParseResult<Stmt> parseVardecStmt(final int position) throws ParseException {
@@ -241,7 +247,7 @@ public class Parser {
         final ParseResult<Exp> exp = parseExp(vardec.nextPosition+1);
         return new ParseResult<Stmt>(new VardeclareStmt(vardec.result, exp.result),
                                      exp.nextPosition);
-    } // parseAssign
+    } // parseVardecStmt
 
     // STMT::= `Print` exp| type variable `=` exp| lhs `=` exp
     public ParseResult<Stmt> parseStmt(final int position) throws ParseException {
@@ -270,4 +276,5 @@ public class Parser {
                                      token.toString());
         }
     } // parseType
+
 }
