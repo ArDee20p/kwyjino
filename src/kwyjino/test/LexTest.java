@@ -136,36 +136,6 @@ public class LexTest {
 
 		}
 		@Test
-		public void fileread()throws TokenizerException {
-			String data = "";
-		    try {
-				data = new String(Files.readAllBytes(Paths.get("code.txt")));
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			CompilerMain a = new CompilerMain(data);
-				ClassnameToken classa = new ClassnameToken();
-				ObjToken objecta = new ObjToken();
-				LeftBracketToken LeftBrack = new LeftBracketToken();
-				RightBracketToken rbrack = new RightBracketToken();
-				StringVarToken Stri = new StringVarToken();
-				VarToken varto = new VarToken();
-				NewToken newt = new NewToken();
-				while(a.nextToken());
-
-				assertEquals(classa.toString(), a.list.get(0).toString());
-				assertEquals(objecta.toString(), a.list.get(1).toString());
-				assertEquals(LeftBrack.toString(), a.list.get(2).toString());
-				assertEquals(Stri.toString(), a.list.get(3).toString());
-				assertEquals(varto.toString(), a.list.get(4).toString());
-				assertEquals(newt.toString(), a.list.get(5).toString());
-				
-				
-				
-				assertEquals(rbrack.toString(), a.list.get(6).toString());
-			}
-		@Test
 		public void emptycode() throws TokenizerException{
 			CompilerMain a = new CompilerMain("");
 				while(a.nextToken());

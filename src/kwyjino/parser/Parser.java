@@ -54,7 +54,6 @@ public class Parser {
         position = classdefs.nextPosition;
         final ParseResult<List<Stmt>> stmts = parseStmts(position);
         Program program = new Program(classdefs.result, stmts.result);
-        System.out.print(program.toString());
         return new ParseResult<Program>(program, stmts.nextPosition);
     } // parseProgram
     

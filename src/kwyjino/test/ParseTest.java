@@ -355,8 +355,6 @@ public class ParseTest {
 		assertEquals(new ParseResult<NewExp>(newexp, 7), parser.parseExp(0));
 	
 	}
-	
-	//TODO: 
 
 	@Test
 	public void testParseClassVarExp() throws ParseException {
